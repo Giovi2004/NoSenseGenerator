@@ -1,3 +1,4 @@
+package nosensegenerator.nosense;
 public class noun extends word {
     private String[] noun = {
         "dog", "cat", "car", "house", "tree", "computer", "phone", "book", "table", "chair",

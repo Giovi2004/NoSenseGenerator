@@ -1,3 +1,4 @@
+package nosensegenerator.nosense;
 public class verb extends word {
     private String verb;
     private String tense;

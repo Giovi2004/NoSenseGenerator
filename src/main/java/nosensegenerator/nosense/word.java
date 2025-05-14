@@ -1,8 +1,10 @@
+package nosensegenerator.nosense;
 public class word{
     //costruttore
     public word() {
         // Initialize the word object
-    }
+
+        }
     
     //metodi
     public void displayWord() {
@@ -11,4 +13,5 @@ public class word{
     
     // nuovi capi di esemplare
     private String wordType;
+    private String word;
 }
