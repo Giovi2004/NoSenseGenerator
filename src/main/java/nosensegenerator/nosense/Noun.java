@@ -6,15 +6,15 @@ import java.util.Scanner;
 public class Noun{
     private String noun;
     public Noun(){
-        String percorsoFile = "src/main/resources/terms/nouns.json";
+        String FilePath = "src/main/resources/terms/nouns.txt";
         
-        try (Scanner scanner = new Scanner(new File(percorsoFile))) {
+        try (Scanner scanner = new Scanner(new File(FilePath))) {
             while (scanner.hasNextLine()) {
-                String linea = scanner.nextLine();
-                System.out.println(linea);
+                String line = scanner.nextLine();
+                System.out.println(line);
             }
         } catch (FileNotFoundException e) {
-            System.err.println("File non trovato: " + e.getMessage());
+            System.err.println("File not found: " + e.getMessage());
         }
     };
     public String getNoun(){
