@@ -1,0 +1,10 @@
+cat
+dog
+house
+car
+tree
+book
+computer
+phone
+table
+chair
