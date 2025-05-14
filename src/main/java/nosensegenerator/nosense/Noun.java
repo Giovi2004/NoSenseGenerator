@@ -13,6 +13,7 @@ public class Noun{
                 String line = scanner.nextLine();
                 System.out.println(line);
             }
+            scanner.close();
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + e.getMessage());
         }
