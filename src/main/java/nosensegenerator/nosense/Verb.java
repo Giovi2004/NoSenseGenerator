@@ -3,41 +3,61 @@ package nosensegenerator.nosense;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Verb{
 
     private String verb;
-    private int LineCounter = 0;
+    private ArrayList<String> verbs = new ArrayList<>();
     private int generatedNumber = 0;
-    
+    private String FilePath = "src/main/resources/terms/nouns.txt";
+
     // Constructor
     public Verb(){
-        String FilePath = "src/main/resources/terms/verbs.txt";
         
         try (Scanner scanner = new Scanner(new File(FilePath))){
             while (scanner.hasNextLine()){
-                LineCounter++;
+                verbs.add(scanner.nextLine());
             }
-            // Generate a random number between 0 and LineCounter            
-            generatedNumber = (int)(Math.random() * LineCounter);
-            // Reset the scanner to read the file again
             scanner.close();
-            Scanner scanner2 = new Scanner(new File(FilePath));
-            // Loop through the file to get the verb at the generated number
-            for(int i=0; i<LineCounter; i++){
-                if(i==(generatedNumber -1)){
-                    verb = scanner2.nextLine();
-                }
-            }
-            scanner2.close();
         } 
         catch (FileNotFoundException e){
             System.err.println("File not found: " + e.getMessage());
         }
     }
-    // Method to get the generated verb
-    public String getVerb(){
+    public String getverb(){
+        // Generate a random number between 0 and the size of the verbs list
+        generatedNumber = (int)(Math.random() * verbs.size());
+        // Get the verb at the generated number
+        verb = verbs.get(generatedNumber);
+        
         return verb;
+    }
+    // Method to get the list of verbs
+    public void save( ArrayList<String> verbsForFile){
+        // Check if the verbsForFile list is empty
+        if(verbsForFile.isEmpty()){
+            System.out.println("The list of verbs is empty.");
+            return;
+        }
+        // Check if the verb is already in the verbs list
+        for(int i = 0; i < verbsForFile.size(); i++){
+            for(int j = 0; j < verbs.size(); j++){
+                if(!verbsForFile.get(i).equals(verbs.get(j))){
+                    verbs.add(verbsForFile.get(i));
+                    // Save the verbs to a file
+                    try(Writer writer = new FileWriter(FilePath, true)){
+                        writer.write(verbsForFile.get(i) + "\n");
+                        writer.close();
+                    } 
+                    catch (java.io.IOException e){
+                        System.err.println("Error writing to file: " + e.getMessage());
+                    } 
+                }
+            }            
+        }
     }
 }

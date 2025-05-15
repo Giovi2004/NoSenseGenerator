@@ -3,41 +3,61 @@ package nosensegenerator.nosense;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Adjective{
 
     private String adjective;
-    private int LineCounter = 0;
+    private ArrayList<String> adjectives = new ArrayList<>();
     private int generatedNumber = 0;
-    
+    private String FilePath = "src/main/resources/terms/nouns.txt";
+
     // Constructor
     public Adjective(){
-        String FilePath = "src/main/resources/terms/adjectives.txt";
         
         try (Scanner scanner = new Scanner(new File(FilePath))){
             while (scanner.hasNextLine()){
-                LineCounter++;
+                adjectives.add(scanner.nextLine());
             }
-            // Generate a random number between 0 and LineCounter
-            generatedNumber = (int)(Math.random() * LineCounter);
-            // Reset the scanner to read the file again
             scanner.close();
-            Scanner scanner2 = new Scanner(new File(FilePath));
-            // Loop through the file to get the adjective at the generated number
-            for(int i=0; i<LineCounter; i++){
-                if(i==(generatedNumber -1)){
-                    adjective = scanner2.nextLine();
-                }
-            }
-            scanner2.close();
         } 
         catch (FileNotFoundException e){
             System.err.println("File not found: " + e.getMessage());
         }
     }
-    // Method to get the generated adjective
     public String getAdjective(){
+        // Generate a random number between 0 and the size of the adjectives list
+        generatedNumber = (int)(Math.random() * adjectives.size());
+        // Get the adjective at the generated number
+        adjective = adjectives.get(generatedNumber);
+        
         return adjective;
+    }
+    // Method to get the list of adjectives
+    public void save( ArrayList<String> adjectivesForFile){
+        // Check if the adjectivesForFile list is empty
+        if(adjectivesForFile.isEmpty()){
+            System.out.println("The list of adjectives is empty.");
+            return;
+        }
+        // Check if the adjective is already in the adjectives list
+        for(int i = 0; i < adjectivesForFile.size(); i++){
+            for(int j = 0; j < adjectives.size(); j++){
+                if(!adjectivesForFile.get(i).equals(adjectives.get(j))){
+                    adjectives.add(adjectivesForFile.get(i));
+                    // Save the adjectives to a file
+                    try(Writer writer = new FileWriter(FilePath, true)){
+                        writer.write(adjectivesForFile.get(i) + "\n");
+                        writer.close();
+                    } 
+                    catch (java.io.IOException e){
+                        System.err.println("Error writing to file: " + e.getMessage());
+                    } 
+                }
+            }            
+        }
     }
 }
