@@ -19,34 +19,34 @@ class Noun {
     -String noun
     +Noun()
     +String getNoun()
-    +void save(String[] nouns)
+    +void save(List<String> nouns)
 }
 class Verb {
     -String verb
     +Verb()
     +String getVerb()
-    +void save(String[] verbs)
+    +void save(List<String> verbs)
 }
 class Adjective {
     -String adjective
     +Adjective()
     +String getAdjective()
-    +void save(String[] adjectives)
+    +void save(List<String> adjectives)
 }
 class Sentence {
     -String text
-    -String[] verbs
-    -String[] nouns
-    -String[] adjectives
+    -List<String> verbs
+    -List<String> nouns
+    -List<String> adjectives
     +Sentence(String text)
     +String getText()1
     +void setText(String text)
-    +String[] getVerbs()
-    +void setVerbs(String[] verbs)
-    +String[] getNouns()
-    +void setNouns(String[] nouns)
-    +String[] getAdjectives()
-    +void setAdjectives(String[] adjectives)
+    +List<String> getVerbs()
+    +void setVerbs(List<String> verbs)
+    +List<String> getNouns()
+    +void setNouns(List<String> nouns)
+    +List<String> getAdjectives()
+    +void setAdjectives(List<String> adjectives)
 }
 class Generator {
     -String template
