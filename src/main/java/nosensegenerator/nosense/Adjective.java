@@ -1,4 +1,3 @@
-// This class generates a random adjective from a file
 package nosensegenerator.nosense;
 
 import java.io.File;
@@ -15,7 +14,6 @@ public class Adjective{
     private int generatedNumber = 0;
     private String FilePath = "src/main/resources/terms/nouns.txt";
 
-    // Constructor
     public Adjective(){
         
         try (Scanner scanner = new Scanner(new File(FilePath))){
@@ -29,26 +27,20 @@ public class Adjective{
         }
     }
     public String getAdjective(){
-        // Generate a random number between 0 and the size of the adjectives list
-        generatedNumber = (int)(Math.random() * adjectives.size());
-        // Get the adjective at the generated number
+        generatedNumber = (int)(Math.random() * (adjectives.size()-1));
         adjective = adjectives.get(generatedNumber);
         
         return adjective;
     }
-    // Method to get the list of adjectives
     public void save( ArrayList<String> adjectivesForFile){
-        // Check if the adjectivesForFile list is empty
         if(adjectivesForFile.isEmpty()){
             System.out.println("The list of adjectives is empty.");
             return;
         }
-        // Check if the adjective is already in the adjectives list
         for(int i = 0; i < adjectivesForFile.size(); i++){
             for(int j = 0; j < adjectives.size(); j++){
                 if(!adjectivesForFile.get(i).equals(adjectives.get(j))){
                     adjectives.add(adjectivesForFile.get(i));
-                    // Save the adjectives to a file
                     try(Writer writer = new FileWriter(FilePath, true)){
                         writer.write(adjectivesForFile.get(i) + "\n");
                         writer.close();
