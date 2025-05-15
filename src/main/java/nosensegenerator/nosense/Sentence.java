@@ -1,12 +1,12 @@
 package nosensegenerator.nosense;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Sentence {
     private String text;
-    private List<String> verbs;
-    private List<String> nouns;
-    private List<String> adjectives;
+    private ArrayList<String> verbs;
+    private ArrayList<String> nouns;
+    private ArrayList<String> adjectives;
     //aggiungere i gli attributi per il resto dei risultati del analisi
     
     public Sentence(String text) {
@@ -18,22 +18,22 @@ public class Sentence {
     public void setText(String text) {
         this.text = text;
     }
-    public List<String> getVerbs() {
+    public ArrayList<String> getVerbs() {
         return verbs;
     }
-    public void setVerbs(List<String> verbs) {
+    public void setVerbs(ArrayList<String> verbs) {
         this.verbs = verbs;
     }
-    public List<String> getNouns() {
+    public ArrayList<String> getNouns() {
         return nouns;
     }
-    public void setNouns(List<String> nouns) {
+    public void setNouns(ArrayList<String> nouns) {
         this.nouns = nouns;
     }
-    public List<String> getAdjectives() {
+    public ArrayList<String> getAdjectives() {
         return adjectives;
     }
-    public void setAdjectives(List<String> adjectives) {
+    public void setAdjectives(ArrayList<String> adjectives) {
         this.adjectives = adjectives;
     }
     
