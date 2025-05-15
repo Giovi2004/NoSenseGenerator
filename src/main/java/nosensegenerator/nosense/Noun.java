@@ -3,41 +3,61 @@ package nosensegenerator.nosense;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Noun{
 
     private String noun;
-    private int LineCounter = 0;
+    private ArrayList<String> nouns = new ArrayList<>();
     private int generatedNumber = 0;
+    private String FilePath = "src/main/resources/terms/nouns.txt";
 
     // Constructor
     public Noun(){
-        String FilePath = "src/main/resources/terms/nouns.txt";
         
         try (Scanner scanner = new Scanner(new File(FilePath))){
             while (scanner.hasNextLine()){
-                LineCounter++;
+                nouns.add(scanner.nextLine());
             }
-            // Generate a random number between 0 and LineCounter
-            generatedNumber = (int)(Math.random() * LineCounter);
-            // Reset the scanner to read the file again
             scanner.close();
-            Scanner scanner2 = new Scanner(new File(FilePath));
-            // Loop through the file to get the noun at the generated number
-            for(int i=0; i<LineCounter; i++){
-                if(i==(generatedNumber -1)){
-                    noun = scanner2.nextLine();
-                }
-            }
-            scanner2.close();
         } 
         catch (FileNotFoundException e){
             System.err.println("File not found: " + e.getMessage());
         }
     }
-    // Method to get the generated noun
-    public String getNoun(){
+    public String getnoun(){
+        // Generate a random number between 0 and the size of the nouns list
+        generatedNumber = (int)(Math.random() * nouns.size());
+        // Get the noun at the generated number
+        noun = nouns.get(generatedNumber);
+        
         return noun;
+    }
+    // Method to get the list of nouns
+    public void save( ArrayList<String> nounsForFile){
+        // Check if the nounsForFile list is empty
+        if(nounsForFile.isEmpty()){
+            System.out.println("The list of nouns is empty.");
+            return;
+        }
+        // Check if the noun is already in the nouns list
+        for(int i = 0; i < nounsForFile.size(); i++){
+            for(int j = 0; j < nouns.size(); j++){
+                if(!nounsForFile.get(i).equals(nouns.get(j))){
+                    nouns.add(nounsForFile.get(i));
+                    // Save the nouns to a file
+                    try(Writer writer = new FileWriter(FilePath, true)){
+                        writer.write(nounsForFile.get(i) + "\n");
+                        writer.close();
+                    } 
+                    catch (java.io.IOException e){
+                        System.err.println("Error writing to file: " + e.getMessage());
+                    } 
+                }
+            }            
+        }
     }
 }
