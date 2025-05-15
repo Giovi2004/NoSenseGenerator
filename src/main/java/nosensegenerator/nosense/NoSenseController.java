@@ -1,108 +1,124 @@
 package nosensegenerator.nosense;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
-@RestController
+@Controller
+@SessionAttributes({"inputSentence", "generatedSentence", "analysisResult", "toxicityResult"})
 public class NoSenseController {
-    //da sistemate i metodi delle analisi in base a quello che serve
-    private Sentence inputSentence;
-    private Sentence templateSentence;
-    private Sentence generatedSentence;
     private Generator generator;
     private Noun nouns;
     private Verb verbs;
     private Adjective adjectives;
     
-    public NoSenseController(){
-        this.inputSentence=null;
-        this.templateSentence=null;
-        this.generatedSentence=null;
-        this.generator=new Generator();
-        this.nouns=new Noun();
-        this.verbs=new Verb();
-        this.adjectives=new Adjective();
+    public NoSenseController() {
+        this.generator = new Generator();
+        this.nouns = new Noun();
+        this.verbs = new Verb();
+        this.adjectives = new Adjective();
     }
 
-    @PostMapping("/api/analyze")
-    public ResponseEntity<ApiResponse<String>> AnalyzeInputSentence(@RequestBody String input) {
-        try {
-            this.inputSentence = new Sentence(input);
-            //inserire il risultato nella inputSentence
-            //string result = Analyzer.analyzeStructure(inputSentence);
-            return ResponseEntity.ok(ApiResponse.success("result"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error("Failed to analyze sentence: " + e.getMessage()));
+    @ModelAttribute
+    public void initializeSession(Model model) {
+        if (!model.containsAttribute("inputSentence")) {
+            model.addAttribute("inputSentence", "");
+        }
+        if (!model.containsAttribute("generatedSentence")) {
+            model.addAttribute("generatedSentence", "");
+        }
+        if (!model.containsAttribute("analysisResult")) {
+            model.addAttribute("analysisResult", "");
+        }
+        if (!model.containsAttribute("toxicityResult")) {
+            model.addAttribute("toxicityResult", "");
         }
     }
 
-    @GetMapping("/api/generate")
-    public ResponseEntity<ApiResponse<String>> GetGeneratedSentence(@RequestParam(required = false, defaultValue = "present") String time) {
-        if(inputSentence == null) {
-            return ResponseEntity.badRequest().body(ApiResponse.error("No input sentence has been analyzed yet"));
-        }
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
 
+    @PostMapping("/analyze")
+    public String analyzeInputSentence(@RequestParam String sentence, 
+                                     @RequestParam(defaultValue = "false") boolean requestSyntacticTree, 
+                                     Model model) {
         try {
-            // First generate the template
-            GenerateTemplateSentence();
+            Sentence inputSentence = new Sentence(sentence);
+            String analysisResult = "Analysis completed successfully"; // Replace with actual analysis
             
-            // Then fill it with content
-            String generatedText = FillTemplateSentence();
+            if (requestSyntacticTree) {
+                //Provide the Syntactic Tree
+            }
             
-            return ResponseEntity.ok(ApiResponse.success(generatedText));
+            model.addAttribute("inputSentence", sentence);
+            model.addAttribute("analysisResult", analysisResult);
+            
+            return "index";
         } catch (Exception e) {
-            // Log the error and return a user-friendly message
-            System.err.println("Error generating sentence: " + e.getMessage());
-            return ResponseEntity.badRequest().body(ApiResponse.error("Error generating sentence. Please try again."));
+            model.addAttribute("error", "Failed to analyze sentence: " + e.getMessage());
+            return "index";
         }
     }
 
-    public String GenerateTemplateSentence(){
-        //this.templateSentence=generator.generateTemplateSentence();
-        return this.templateSentence.getText();
-    }
-
-    //da vedere se gestire il tempo della frase
-    /*public String FillTemplateSentence(String time){
-        //this.generatedSentence=generator.fillTemplateSentence(this.templateSentence,this.inputSentence,this.nouns,this.verbs,this.adjectives,time);
-        return this.generatedSentence.getText();
-    }*/
-
-    public String FillTemplateSentence(){
-        //this.generatedSentence=generator.fillTemplateSentence(this.templateSentence,this.inputSentence,this.nouns,this.verbs,this.adjectives);
-        return this.generatedSentence.getText();
-    }
-
-    @GetMapping("/api/toxicity")
-    public ResponseEntity<ApiResponse<String>> AnalyzeGeneratedSentenceToxicity() {
-        if (generatedSentence == null) {
-            return ResponseEntity.badRequest().body(ApiResponse.error("No sentence has been generated yet"));
+    @PostMapping("/generate")
+    public String generateSentence(@RequestParam(required = false, defaultValue = "present") String time,
+                                 @ModelAttribute("inputSentence") String inputSentence,
+                                 Model model) {
+        if (inputSentence == null || inputSentence.isEmpty()) {
+            model.addAttribute("error", "No input sentence has been analyzed yet");
+            return "index";
         }
 
         try {
-            //String toxicityResult = Analyzer.analyzeToxicity(this.generatedSentence);
-            // Temporary placeholder until the actual analyzer is implemented
-            String toxicityResult = "Toxicity analysis placeholder for: " + generatedSentence.getText();
-            return ResponseEntity.ok(ApiResponse.success(toxicityResult));
+            String generatedText = generateTemplateSentence();
+            String toxicityResult = analyzeToxicity();
+            
+            model.addAttribute("generatedSentence", generatedText);
+            model.addAttribute("toxicityResult", toxicityResult);
+            
+            return "index";
         } catch (Exception e) {
-            System.err.println("Error analyzing toxicity: " + e.getMessage());
-            return ResponseEntity.badRequest().body(ApiResponse.error("Error analyzing toxicity. Please try again."));
+            model.addAttribute("error", "Error generating sentence: " + e.getMessage());
+            return "index";
         }
     }
 
-    @PostMapping("/api/saveterms")
-    public ResponseEntity<ApiResponse<Void>> SaveTerms() {
+    @PostMapping("/save")
+    public String saveTerms(@ModelAttribute("inputSentence") String inputSentence, Model model) {
+        if (inputSentence == null || inputSentence.isEmpty()) {
+            model.addAttribute("error", "No sentence to save. Please analyze a sentence first.");
+            return "index";
+        }
+
         try {
             //nouns.save(inputSentence.getNouns());
             //verbs.save(inputSentence.getVerbs());
             //adjectives.save(inputSentence.getAdjectives());
-            return ResponseEntity.ok(ApiResponse.success(null));
+            
+            model.addAttribute("success", "Terms saved successfully!");
+            return "index";
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error("Failed to save terms: " + e.getMessage()));
+            model.addAttribute("error", "Failed to save terms: " + e.getMessage());
+            return "index";
         }
+    }
+
+    @PostMapping("/clear-session")
+    public String clearSession(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+        return "redirect:/";
+    }
+
+    private String generateTemplateSentence() {
+        //this.templateSentence=generator.generateTemplateSentence();
+        return "Generated template sentence placeholder";
+    }
+
+    private String analyzeToxicity() {
+        //return Analyzer.analyzeToxicity(this.generatedSentence);
+        return "Toxicity analysis placeholder";
     }
 }
