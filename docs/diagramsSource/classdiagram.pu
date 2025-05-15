@@ -1,0 +1,75 @@
+@startuml
+class NoSenseController {
+    -Sentence inputSentence
+    -Sentence templateSentence
+    -Sentence generatedSentence
+    -Generator generator
+    -Noun nouns
+    -Verb verbs
+    -Adjective adjectives
+    +NoSenseController()
+    +void AnalyzeInputSentence(String input)
+    +String GenerateTemplateSentence()
+    +String FillTemplateSentence()
+    +String AnalyzeGeneratedSentenceToxicity()
+    +void SaveTerms()
+}
+
+class Noun {
+    -String noun
+    +Noun()
+    +String getNoun()
+    +void save(String[] nouns)
+}
+class Verb {
+    -String verb
+    +Verb()
+    +String getVerb()
+    +void save(String[] verbs)
+}
+class Adjective {
+    -String adjective
+    +Adjective()
+    +String getAdjective()
+    +void save(String[] adjectives)
+}
+class Sentence {
+    -String text
+    -String[] verbs
+    -String[] nouns
+    -String[] adjectives
+    +Sentence(String text)
+    +String getText()
+    +void setText(String text)
+    +String[] getVerbs()
+    +void setVerbs(String[] verbs)
+    +String[] getNouns()
+    +void setNouns(String[] nouns)
+    +String[] getAdjectives()
+    +void setAdjectives(String[] adjectives)
+}
+class Generator {
+    -String template
+    +Generator()
+    +String generateTemplateSentence()
+    +String fillTemplateSentence(Sentence templateSentence, Sentence inputSentence, Noun nouns, Verb verbs, Adjective adjectives)
+}
+class Analyzer {
+    -String text
+    +static String analyzeToxicity(String text)
+    +static void analyzeStructure(Sentence inputSentence)
+}
+
+NoSenseController "1" *-- "many" Sentence : contains
+Generator --> Noun : uses
+Generator --> Verb : uses
+Generator --> Adjective : uses
+Generator -->Sentence : generates
+NoSenseController --> Analyzer : uses
+Analyzer --> Sentence : analyzes
+NoSenseController "1" *-- "1" Noun : contains and instantiates
+NoSenseController "1" *-- "1" Verb : contains and instantiates
+NoSenseController "1" *-- "1" Adjective : contains and instantiates
+NoSenseController "1" *-- "1" Generator : contains and instantiates
+
+@enduml
