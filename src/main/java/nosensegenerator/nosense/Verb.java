@@ -1,4 +1,3 @@
-// This class generates a random verb from a file
 package nosensegenerator.nosense;
 
 import java.io.File;
@@ -15,7 +14,6 @@ public class Verb{
     private int generatedNumber = 0;
     private String FilePath = "src/main/resources/terms/nouns.txt";
 
-    // Constructor
     public Verb(){
         
         try (Scanner scanner = new Scanner(new File(FilePath))){
@@ -29,26 +27,20 @@ public class Verb{
         }
     }
     public String getverb(){
-        // Generate a random number between 0 and the size of the verbs list
-        generatedNumber = (int)(Math.random() * verbs.size());
-        // Get the verb at the generated number
+        generatedNumber = (int)(Math.random() * (verbs.size()-1));
         verb = verbs.get(generatedNumber);
         
         return verb;
     }
-    // Method to get the list of verbs
     public void save( ArrayList<String> verbsForFile){
-        // Check if the verbsForFile list is empty
         if(verbsForFile.isEmpty()){
             System.out.println("The list of verbs is empty.");
             return;
         }
-        // Check if the verb is already in the verbs list
         for(int i = 0; i < verbsForFile.size(); i++){
             for(int j = 0; j < verbs.size(); j++){
                 if(!verbsForFile.get(i).equals(verbs.get(j))){
                     verbs.add(verbsForFile.get(i));
-                    // Save the verbs to a file
                     try(Writer writer = new FileWriter(FilePath, true)){
                         writer.write(verbsForFile.get(i) + "\n");
                         writer.close();
