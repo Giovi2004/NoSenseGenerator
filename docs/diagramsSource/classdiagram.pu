@@ -39,7 +39,7 @@ class Sentence {
     -String[] nouns
     -String[] adjectives
     +Sentence(String text)
-    +String getText()
+    +String getText()1
     +void setText(String text)
     +String[] getVerbs()
     +void setVerbs(String[] verbs)
@@ -56,8 +56,8 @@ class Generator {
 }
 class Analyzer {
     -String text
-    +static String analyzeToxicity(String text)
-    +static void analyzeStructure(Sentence inputSentence)
+    +static String analyzeToxicity(Sentence sentence)
+    +static void analyzeStructure(Sentence sentence)
 }
 
 NoSenseController "1" *-- "many" Sentence : contains
