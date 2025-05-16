@@ -109,6 +109,11 @@
                                     <p class="card-text" th:text="${toxicityResult ?: 'The toxicity analysis of the generated sentence will appear here'}">
                                         The toxicity analysis of the generated sentence will appear here
                                     </p>
+                                    <form th:action="@{/toxicity}" method="post" class="mt-auto">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            Analyze Toxicity
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

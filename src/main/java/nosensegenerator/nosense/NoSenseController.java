@@ -12,12 +12,14 @@ public class NoSenseController {
     private Noun nouns;
     private Verb verbs;
     private Adjective adjectives;
+    private Analyzer analyzer;
     
     public NoSenseController() {
         this.generator = new Generator();
         this.nouns = new Noun();
         this.verbs = new Verb();
         this.adjectives = new Adjective();
+        this.analyzer = new Analyzer();
     }
 
     @ModelAttribute
@@ -45,6 +47,11 @@ public class NoSenseController {
     public String analyzeInputSentence(@RequestParam String sentence, 
                                      @RequestParam(defaultValue = "false") boolean requestSyntacticTree, 
                                      Model model) {
+        if (sentence.trim().isEmpty()) {
+            model.addAttribute("error", "Please enter a sentence to analyze");
+            return "index";
+        }
+
         try {
             Sentence inputSentence = new Sentence(sentence);
             String analysisResult = "Analysis completed successfully"; // Replace with actual analysis
@@ -74,10 +81,8 @@ public class NoSenseController {
 
         try {
             String generatedText = generateTemplateSentence();
-            String toxicityResult = analyzeToxicity();
             
             model.addAttribute("generatedSentence", generatedText);
-            model.addAttribute("toxicityResult", toxicityResult);
             
             return "index";
         } catch (Exception e) {
@@ -112,13 +117,26 @@ public class NoSenseController {
         return "redirect:/";
     }
 
+    @PostMapping("/toxicity")
+    public String analyzeToxicity(@ModelAttribute("generatedSentence") String generatedSentence, Model model) {
+        if (generatedSentence == null || generatedSentence.isEmpty()) {
+            model.addAttribute("error", "No sentence has been generated yet to analyze");
+            return "index";
+        }
+
+        try {
+            //return analyzer.analyzeToxicity(this.generatedSentence);
+            String toxicityResult = "Toxicity analysis placeholder";
+            model.addAttribute("toxicityResult", toxicityResult);
+            return "index";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error analyzing toxicity: " + e.getMessage());
+            return "index";
+        }
+    }
+
     private String generateTemplateSentence() {
         //this.templateSentence=generator.generateTemplateSentence();
         return "Generated template sentence placeholder";
-    }
-
-    private String analyzeToxicity() {
-        //return Analyzer.analyzeToxicity(this.generatedSentence);
-        return "Toxicity analysis placeholder";
     }
 }
