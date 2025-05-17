@@ -126,7 +126,7 @@ public class NoSenseController {
 
         try {
             generatedSentence.setToxicityResultTokens(Analyzer.analyzeToxicity(generatedSentence.getText()));
-            model.addAttribute("toxicityResult", toxicityResult);
+            model.addAttribute("toxicityResult", "");
             return "index";
         } catch (Exception e) {
             model.addAttribute("error", "Error analyzing toxicity: " + e.getMessage());

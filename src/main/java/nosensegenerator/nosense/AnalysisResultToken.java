@@ -11,7 +11,7 @@ public class AnalysisResultToken {
         this.index = index;
         this.text = text;
         this.tag = tag;
-        this.tense = (tense != "TENSE_UNKNOWN") ? tense : "";
+        this.tense = (tense.equals("TENSE_UNKNOWN")) ? "" : tense;
         this.dependencyLabel = dependencyLabel;
         this.dependencyToken = dependencyToken;
     }
