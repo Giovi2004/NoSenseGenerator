@@ -12,14 +12,18 @@ public class NoSenseController {
     private Noun nouns;
     private Verb verbs;
     private Adjective adjectives;
-    private Analyzer analyzer;
     
     public NoSenseController() {
         this.generator = new Generator();
         this.nouns = new Noun();
         this.verbs = new Verb();
         this.adjectives = new Adjective();
-        this.analyzer = new Analyzer();
+        try{
+            Analyzer.analyzeToxicity("Questa è una bella frase");
+        }catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+        
     }
 
     @ModelAttribute
@@ -54,13 +58,14 @@ public class NoSenseController {
 
         try {
             Sentence inputSentence = new Sentence(sentence);
+            inputSentence.setAnalysisResultTokens(Analyzer.analyzeSyntax(sentence));
             String analysisResult = "Analysis completed successfully"; // Replace with actual analysis
             
             if (requestSyntacticTree) {
                 //Provide the Syntactic Tree
             }
             
-            model.addAttribute("inputSentence", sentence);
+            model.addAttribute("inputSentence", inputSentence);
             model.addAttribute("analysisResult", analysisResult);
             
             return "index";
@@ -80,7 +85,7 @@ public class NoSenseController {
         }
 
         try {
-            String generatedText = generateTemplateSentence();
+            Sentence generatedText = new Sentence(generateTemplateSentence());
             
             model.addAttribute("generatedSentence", generatedText);
             
@@ -92,8 +97,8 @@ public class NoSenseController {
     }
 
     @PostMapping("/save")
-    public String saveTerms(@ModelAttribute("inputSentence") String inputSentence, Model model) {
-        if (inputSentence == null || inputSentence.isEmpty()) {
+    public String saveTerms(@ModelAttribute("inputSentence") Sentence inputSentence, Model model) {
+        if (inputSentence == null) {
             model.addAttribute("error", "No sentence to save. Please analyze a sentence first.");
             return "index";
         }
@@ -118,15 +123,14 @@ public class NoSenseController {
     }
 
     @PostMapping("/toxicity")
-    public String analyzeToxicity(@ModelAttribute("generatedSentence") String generatedSentence, Model model) {
-        if (generatedSentence == null || generatedSentence.isEmpty()) {
+    public String analyzeToxicity(@ModelAttribute("generatedSentence") Sentence generatedSentence, Model model) {
+        if (generatedSentence == null) {
             model.addAttribute("error", "No sentence has been generated yet to analyze");
             return "index";
         }
 
         try {
-            //return analyzer.analyzeToxicity(this.generatedSentence);
-            String toxicityResult = "Toxicity analysis placeholder";
+            generatedSentence.setToxicityResultTokens(Analyzer.analyzeToxicity(generatedSentence.getText()));
             model.addAttribute("toxicityResult", toxicityResult);
             return "index";
         } catch (Exception e) {
