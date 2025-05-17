@@ -6,24 +6,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
-@SessionAttributes({"inputSentence", "generatedSentence", "analysisResult", "toxicityResult"})
+@SessionAttributes({ "inputSentence", "templateSentence", "generatedSentence", "analysisResult", "toxicityResult" })
 public class NoSenseController {
     private Generator generator;
-    private Noun nouns;
-    private Verb verbs;
-    private Adjective adjectives;
-    
+
     public NoSenseController() {
         this.generator = new Generator();
-        this.nouns = new Noun();
-        this.verbs = new Verb();
-        this.adjectives = new Adjective();
-        try{
+
+        try {
             Analyzer.analyzeToxicity("Questa è una bella frase");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-        
+
     }
 
     @ModelAttribute
@@ -48,9 +43,9 @@ public class NoSenseController {
     }
 
     @PostMapping("/analyze")
-    public String analyzeInputSentence(@RequestParam String sentence, 
-                                     @RequestParam(defaultValue = "false") boolean requestSyntacticTree, 
-                                     Model model) {
+    public String analyzeInputSentence(@RequestParam String sentence,
+            @RequestParam(defaultValue = "false") boolean requestSyntacticTree,
+            Model model) {
         if (sentence.trim().isEmpty()) {
             model.addAttribute("error", "Please enter a sentence to analyze");
             return "index";
@@ -60,14 +55,14 @@ public class NoSenseController {
             Sentence inputSentence = new Sentence(sentence);
             inputSentence.setAnalysisResultTokens(Analyzer.analyzeSyntax(sentence));
             String analysisResult = "Analysis completed successfully"; // Replace with actual analysis
-            
+
             if (requestSyntacticTree) {
-                //Provide the Syntactic Tree
+                // Provide the Syntactic Tree
             }
-            
+
             model.addAttribute("inputSentence", inputSentence);
             model.addAttribute("analysisResult", analysisResult);
-            
+
             return "index";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to analyze sentence: " + e.getMessage());
@@ -77,18 +72,20 @@ public class NoSenseController {
 
     @PostMapping("/generate")
     public String generateSentence(@RequestParam(required = false, defaultValue = "present") String time,
-                                 @ModelAttribute("inputSentence") String inputSentence,
-                                 Model model) {
-        if (inputSentence == null || inputSentence.isEmpty()) {
+            @ModelAttribute("inputSentence") Sentence inputSentence,
+            Model model) {
+        if (inputSentence == null) {
             model.addAttribute("error", "No input sentence has been analyzed yet");
             return "index";
         }
 
         try {
-            Sentence generatedText = new Sentence(generateTemplateSentence());
-            
-            model.addAttribute("generatedSentence", generatedText);
-            
+            String templateSentence = generateTemplateSentence();
+            Sentence generatedSentence = generator.fillTemplateSentence(templateSentence, inputSentence, time);
+
+            model.addAttribute("generatedSentence", generatedSentence);
+            model.addAttribute("templateSentence", templateSentence);
+
             return "index";
         } catch (Exception e) {
             model.addAttribute("error", "Error generating sentence: " + e.getMessage());
@@ -104,10 +101,8 @@ public class NoSenseController {
         }
 
         try {
-            //nouns.save(inputSentence.getNouns());
-            //verbs.save(inputSentence.getVerbs());
-            //adjectives.save(inputSentence.getAdjectives());
-            
+            generator.saveFromSentence(inputSentence);
+
             model.addAttribute("success", "Terms saved successfully!");
             return "index";
         } catch (Exception e) {
@@ -140,7 +135,7 @@ public class NoSenseController {
     }
 
     private String generateTemplateSentence() {
-        //this.templateSentence=generator.generateTemplateSentence();
+        // this.templateSentence=generator.generateTemplateSentence();
         return "Generated template sentence placeholder";
     }
 }
