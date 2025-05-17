@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "uniproject-460012",
+  "private_key_id": "dd44e918c61202efc8bea5ba9580fc39cd5ef064",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJJu1jTW9JjV2L\nzoJLE8wuiybUsNo9QGDTWHjgarJGgW7mytuqmsD1QnV59omKBJj4Csn5FT+RO+gs\n0wLrk3wbSpyghC5f+KH34iPfxbt6fgNX8itPnZXqQSUwUluoLIuUdU+H3v7h4vOc\ntEOUcLnnCHxOVTwaTVTrlUeAeb6HkNDSqw4xNJ1xc0Y/2Xc8vKqt/ymx8pg3pg4P\nvzqbAzzEYKtEm3zKX0M3qLFvuFwnuxv7JIV6D7SbtmYmeP1q3Uh3/YgDlF3IA1cs\nprdfrk1z9w5sMLU/Z5Z6piKqOk0G+wADFCpMJ9yDOBScn38vSb+ySV6cNhb1FJ6e\nA7OeCLcJAgMBAAECggEACdnnzL7OF6jeTyqEVwjxLWMpoHqVm/2H856YABjTNYDB\nRBKxqPlLQFFKgsUAMP8CPtbIbXQM8oZS9V8GlZYmtDxDNdlDX1yqq5xeBWeGdvx7\nTXAewhdsCbzta7oDPLxxv/BYcZI9b79qdUVrlql7cUUit8AuevThyjSiLwVg8pXR\n3GChEsl14QXrpKQ+x8xvO/OP7+X+yF9wfTUOzYSMIIup8mHT731lLZW020P9avPS\nkI/T85uS5eR/BstzmPw3qhAMdzpX3HKLmwWCjGO1x5OPeth+4OTeB+yX41+Z87Gi\n8Wcm8xC8/EoU9gyH66v8vQHlGnk/XkLZnC9TMb4rwQKBgQD/PP3xo24pl+53icis\nHHP+23N0ecDaRxYUamjNg7rF6cZ0iXDLtl0W3QsSHp7doaufqSkfx5tCT6kQaOwd\n5f3229fByN/RNDLRxFsJlgfMBfo34cF9PmXykpikLktqsd3TlQWODbSnL0Oa2URd\nxiEUY+fMgD3EeqIfqbQYtBf8wwKBgQDJwJy5gXMQv5CPFMQ0mSLYldUIZ7SG8HLv\n9YyZS9lvC8BtgdIhyV+6J3dlz8GC8m+m2ZNpgb4zZHmsIUbgL6OKysAuS4SjQxie\n3qKnAAbPpuz2D8vb4ZGtmyU+7vT3w7ofrlYs6ZwKr4fmvNsqMz963CUqxhZrqHe9\nDaHXEF8wQwKBgQDxxVWLEdMlJRynMOXcWmtqC3f26enLGbEJj65Mli5SkNoCw7oL\nzWeqY6G7/TNhH2ZRq8wfpVUlYA32VFztCVIjByX+Ewgnw/kriILvtqUWFsdpLbi5\nqWSqfUCHrK6Vl3xXkn6bi9IG15eDU7EV3rqw9N26cfOQbNWrhnXpPJbIPwKBgB92\nNfqHwVXfSb/GUUKSjuiPlQUWhwR0AriA5kgRl/rFLmDlWcuDB7aT6P6rg1XUUK0I\nSQCvBuYkyQSau97CDxLZw1Z02F5NXE2KEntQeb9wHIvSssu7RWh5RTmnMfRhRWkj\nWrTuSTMxZFQLJ3JRQ5j5M6KT+XMYdnO46IANQYrZAoGAZHWzBeh6AASjH4lnxb38\n4yMnhHaGMo8u/9fnG5svQqFKnuhdaSW+FHCTba7Lxkht/RcSjyx6s1ceKyqJhJZ4\niBmrmMGoQeizmvW5UOYXOV+otLPGvcHThw+zobZmTwXRipGlCX2kyaLl4ybxMJK9\nPa9ZuOtODFw1wfvkIbRKK6E=\n-----END PRIVATE KEY-----\n",
+  "client_email": "nonsense-api-access@uniproject-460012.iam.gserviceaccount.com",
+  "client_id": "106144987095510040622",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/nonsense-api-access%40uniproject-460012.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
