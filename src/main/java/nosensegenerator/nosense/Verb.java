@@ -10,8 +10,7 @@ public class Verb {
     private ArrayList<String> verbsFuture = new ArrayList<>();
     private int generatedNumber = 0;
     private String FilePath = "src/main/resources/terms/verbs.txt";
-    private String FilePathPresent =
-        "src/main/resources/terms/verbsPresent.txt";
+    private String FilePathPresent = "src/main/resources/terms/verbsPresent.txt";
     private String FilePathPast = "src/main/resources/terms/verbsPast.txt";
     private String FilePathFuture = "src/main/resources/terms/verbsFuture.txt";
 
