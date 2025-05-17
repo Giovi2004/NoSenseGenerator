@@ -37,6 +37,29 @@ public class AnalyzerTest {
         // Test the analyzeToxicity method
         String sentence = "This is a test sentence.";
         ArrayList<ToxicityResultToken> result = Analyzer.analyzeToxicity(sentence);
+        ArrayList<ToxicityResultToken> expected = new ArrayList<>();
+        expected.add(new ToxicityResultToken("Toxic", 0.018770736));
+        expected.add(new ToxicityResultToken("Insult", 0.012034906));
+        expected.add(new ToxicityResultToken("Profanity", 0.0052250074));
+        expected.add(new ToxicityResultToken("Derogatory", 0.0047925273));
+        expected.add(new ToxicityResultToken("Sexual", 0.0024701601));
+        expected.add(new ToxicityResultToken("Death, Harm & Tragedy", 0.005982054));
+        expected.add(new ToxicityResultToken("Violent", 0.0025839794));
+        expected.add(new ToxicityResultToken("Firearms & Weapons", 0.0));
+        expected.add(new ToxicityResultToken("Public Safety", 0.010695187));
+        expected.add(new ToxicityResultToken("Health", 0.03495007));
+        expected.add(new ToxicityResultToken("Religion & Belief", 0.012507818));
+        expected.add(new ToxicityResultToken("Illicit Drugs", 0.00955414));
+        expected.add(new ToxicityResultToken("War & Conflict", 0.008333334));
+        expected.add(new ToxicityResultToken("Politics", 0.0028191702));
+        expected.add(new ToxicityResultToken("Finance", 0.007633588));
+        expected.add(new ToxicityResultToken("Legal", 0.0029382957));
+        for (int i = 0; i < result.size(); i++) {
+            ToxicityResultToken token = result.get(i);
+            ToxicityResultToken expectedToken = expected.get(i);
+            assertEquals(token.getName(), expectedToken.getName());
+            assertEquals(token.getConfidence(), expectedToken.getConfidence());
+        }
     }
     
 }

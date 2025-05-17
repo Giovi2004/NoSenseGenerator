@@ -12,13 +12,6 @@ public class NoSenseController {
 
     public NoSenseController() {
         this.generator = new Generator();
-
-        try {
-            Analyzer.analyzeToxicity("Questa è una bella frase");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
     }
 
     @ModelAttribute
