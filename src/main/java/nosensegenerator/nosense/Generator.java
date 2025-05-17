@@ -7,10 +7,10 @@ public class Generator {
     private Noun nouns;
     private Verb verbs;
     private Adjective adjectives;
-    private String FilePath = "src/main/resources/terms/sentences.txt";
+    private String filePath = "src/main/resources/terms/sentences.txt";
 
     public Generator() {
-        this.templates = FileHandler.load(this.FilePath);
+        this.templates = FileHandler.load(this.filePath);
         this.nouns = new Noun();
         this.verbs = new Verb();
         this.adjectives = new Adjective();

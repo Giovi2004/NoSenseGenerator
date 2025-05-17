@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class FileHandler {
 
-    public static void save(ArrayList<String> terms, ArrayList<String> termsForFile, String FilePath){
+    public static void save(ArrayList<String> terms, ArrayList<String> termsForFile, String filePath){
         if(termsForFile.isEmpty()){
             System.out.println("The list of terms is empty.");
             return;
@@ -18,7 +18,7 @@ public class FileHandler {
             for(int j = 0; j < terms.size(); j++){
                 if(!termsForFile.get(i).equals(terms.get(j))){
                     terms.add(termsForFile.get(i));
-                    try(Writer writer = new FileWriter(FilePath, true)){
+                    try(Writer writer = new FileWriter(filePath, true)){
                         writer.write(termsForFile.get(i) + "\n");
                         writer.close();
                     } 
@@ -30,9 +30,9 @@ public class FileHandler {
         }
     }
 
-    public static ArrayList<String> load(String FilePath){
+    public static ArrayList<String> load(String filePath){
         ArrayList<String> terms = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File(FilePath))){
+        try (Scanner scanner = new Scanner(new File(filePath))){
             while (scanner.hasNextLine()){
                 terms.add(scanner.nextLine());
             }

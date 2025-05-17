@@ -6,10 +6,10 @@ public class Noun {
 
     private ArrayList<String> nouns = new ArrayList<>();
     private int generatedNumber = 0;
-    private String FilePath = "src/main/resources/terms/nouns.txt";
+    private String filePath = "src/main/resources/terms/nouns.txt";
 
     public Noun() {
-        nouns = FileHandler.load(FilePath);
+        nouns = FileHandler.load(filePath);
     }
 
     public String getnoun() {
@@ -20,6 +20,6 @@ public class Noun {
     }
 
     public void save(ArrayList<String> nounsForFile) {
-        FileHandler.save(nouns, nounsForFile, FilePath);
+        FileHandler.save(nouns, nounsForFile, filePath);
     }
 }

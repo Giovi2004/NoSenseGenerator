@@ -1,75 +1,125 @@
 @startuml
 class NoSenseController {
-    -Sentence inputSentence
-    -Sentence templateSentence
-    -Sentence generatedSentence
     -Generator generator
-    -Noun nouns
-    -Verb verbs
-    -Adjective adjectives
+    -Sentence inputSentence
+    -String templateSentence
+    -Sentence generatedSentence
     +NoSenseController()
-    +void AnalyzeInputSentence(String input)
-    +String GenerateTemplateSentence()
-    +String FillTemplateSentence()
-    +String AnalyzeGeneratedSentenceToxicity()
-    +void SaveTerms()
+    +void initializeSession(Model model)
+    +String index()
+    +String analyzeInputSentence(String sentence, boolean requestSyntacticTree, Model model)
+    +String generateSentence(String time, Sentence inputSentence, Model model)
+    +String saveTerms(Sentence inputSentence, Model model)
+    +String analyzeToxicity(Sentence generatedSentence, Model model)
+    -String generateTemplateSentence()
 }
 
 class Noun {
-    -String noun
+    -ArrayList<String> nouns
+    -generatedNumber
+    -String filePath
     +Noun()
     +String getNoun()
-    +void save(ArrayList<String> nouns)
+    +void save(ArrayList<String> nounsForFile)
 }
 class Verb {
-    -String verb
+    -ArrayList<String> verbs
+    -ArrayList<String> verbsPresent
+    -ArrayList<String> verbsPast
+    -ArrayList<String> verbsFuture
+    -generatedNumber
+    -String filePath
+    -String filePathPresent
+    -String filePathPast
+    -String filePathFuture
     +Verb()
-    +String getVerb()
-    +void save(ArrayList<String> verbs)
+    +String getVerb(String time)
+    +void save(String time, ArrayList<String> verbs)
 }
 class Adjective {
-    -String adjective
+    -ArrayList<String> adjectives
+    -generatedNumber
+    -String filePath
     +Adjective()
     +String getAdjective()
-    +void save(ArrayList<String> adjectives)
+    +void save(ArrayList<String> adjectivesForFile)
 }
 class Sentence {
     -String text
-    -ArrayList<String> verbs
-    -ArrayList<String> nouns
-    -ArrayList<String> adjectives
+    -ArrayList<AnalysisResultToken> analysisResultTokens
+    -ArrayList<ToxicityResultToken> toxicityResultTokens
     +Sentence(String text)
-    +String getText()1
+    +String getText()
     +void setText(String text)
-    +ArrayList<String> getVerbs()
-    +void setVerbs(ArrayList<String> verbs)
+    +ArrayList<String> getVerbs(String tense)
     +ArrayList<String> getNouns()
-    +void setNouns(ArrayList<String> nouns)
     +ArrayList<String> getAdjectives()
-    +void setAdjectives(ArrayList<String> adjectives)
-}
-class Generator {
-    -String template
-    +Generator()
-    +String generateTemplateSentence()
-    +String fillTemplateSentence(Sentence templateSentence, Sentence inputSentence, Noun nouns, Verb verbs, Adjective adjectives)
-}
-class Analyzer {
-    -String text
-    +static String analyzeToxicity(Sentence sentence)
-    +static void analyzeStructure(Sentence sentence)
+    +ArrayList<AnalysisResultToken> getAnalysisResultTokens()
+    +void setAnalysisResultTokens(ArrayList<AnalysisResultToken> analysisResultTokens)
+    +ArrayList<ToxicityResultToken> getToxicityResultTokens()
+    +void setToxicityResultTokens(ArrayList<ToxicityResultToken> toxicityResultTokens)
 }
 
+class Generator {
+    -ArrayList<String> templates
+    -Noun nouns
+    -Verb verbs
+    -Adjective adjectives
+    -String filePath = "src/main/resources/terms/sentences.txt"
+    +Generator()
+    +String generateTemplateSentence()
+    +Sentence fillTemplateSentence(String template, Sentence inputSentence, String time)
+    +void saveFromSentence(Sentence input)
+}
+
+class Analyzer {
+    -String text
+    -static String apiKey;
+    +static ArrayList<ToxicityResultToken> analyzeToxicity(String sentence)
+    +static ArrayList<AnalysisResultToken> analyzeSyntax(String sentence)
+}
+class AnalysisResultToken {
+    -int index
+    -String text
+    -String tag
+    -String tense
+    -String dependencyLabel
+    -int dependencyToken
+    +AnalysisResultToken(int index, String text, String tag, String dependencyLabel, int dependencyToken, String tense)
+    +int getIndex()
+    +String getText()
+    +String getTag()
+    +String getTense()
+    +String getDependencyLabel()
+    +int getDependencyToken()
+}
+
+class FileHandler {
+    +static void save(ArrayList<String> terms, ArrayList<String> termsForFile, String filePath)
+    +static ArrayList<String> load(String filePath)
+}
+class ToxicityResultToken {
+    -String name
+    -Double confidence
+    +ToxicityResultToken(String name, Double confidence)
+    +String getName()
+    +Double getConfidence()
+}
+
+
 NoSenseController "1" *-- "many" Sentence : contains
-Generator --> Noun : uses
-Generator --> Verb : uses
-Generator --> Adjective : uses
 Generator -->Sentence : generates
 NoSenseController --> Analyzer : uses
 Analyzer --> Sentence : analyzes
-NoSenseController "1" *-- "1" Noun : contains and instantiates
-NoSenseController "1" *-- "1" Verb : contains and instantiates
-NoSenseController "1" *-- "1" Adjective : contains and instantiates
+Generator "1" *-- "1" Noun : contains and instantiates
+Generator "1" *-- "1" Verb : contains and instantiates
+Generator "1" *-- "1" Adjective : contains and instantiates
 NoSenseController "1" *-- "1" Generator : contains and instantiates
+Noun  --> FileHandler : uses
+Verb  --> FileHandler : uses
+Adjective  --> FileHandler : uses
+Generator  --> FileHandler : uses
+Sentence "1" *-- "many" AnalysisResultToken : contains
+Sentence "1" *-- "many" ToxicityResultToken : contains
 
 @enduml

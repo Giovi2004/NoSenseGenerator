@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Analyzer {
-    private String text;
     private static String apiKey;
     
     @Autowired

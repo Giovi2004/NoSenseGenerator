@@ -6,10 +6,10 @@ public class Adjective {
 
     private ArrayList<String> adjectives = new ArrayList<>();
     private int generatedNumber = 0;
-    private String FilePath = "src/main/resources/terms/adjectives.txt";
+    private String filePath = "src/main/resources/terms/adjectives.txt";
 
     public Adjective() {
-        adjectives = FileHandler.load(FilePath);
+        adjectives = FileHandler.load(filePath);
     }
 
     public String getAdjective() {
@@ -20,6 +20,6 @@ public class Adjective {
     }
 
     public void save(ArrayList<String> adjectivesForFile) {
-        FileHandler.save(adjectives, adjectivesForFile, FilePath);
+        FileHandler.save(adjectives, adjectivesForFile, filePath);
     }
 }
