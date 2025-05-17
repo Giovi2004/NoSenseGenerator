@@ -23,7 +23,7 @@ public class Verb {
 
     public String getverb(String time) {
         switch (time) {
-            case "PRENSENT":
+            case "PRESENT":
                 generatedNumber = (int) (Math.random() *
                     (verbsPresent.size() - 1));
                 return verbsPresent.get(generatedNumber);
