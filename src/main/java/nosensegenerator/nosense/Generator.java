@@ -55,6 +55,8 @@ public class Generator {
                 filledTemplate = filledTemplate.replaceFirst("\\[adjective\\]", adjectives.getAdjective());
             }
         }
+        filledTemplate = filledTemplate.toLowerCase();
+        filledTemplate = filledTemplate.substring(0, 1).toUpperCase() + filledTemplate.substring(1);
         return new Sentence(filledTemplate);
     }
 

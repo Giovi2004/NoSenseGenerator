@@ -67,7 +67,7 @@ public class Analyzer {
             ArrayList<AnalysisResultToken> analysisResultTokens = new ArrayList<>();
             for (int i = 0; i < tokens.length(); i++) {
                 JSONObject token = tokens.getJSONObject(i);
-                String text = token.getJSONObject("text").getString("content");
+                String text = token.getJSONObject("text").getString("content").toLowerCase();
                 String tag = token.getJSONObject("partOfSpeech").getString("tag");
                 String tense = token.getJSONObject("partOfSpeech").getString("tense");
                 int headTokenIndex= token.getJSONObject("dependencyEdge").getInt("headTokenIndex");
