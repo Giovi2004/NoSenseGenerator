@@ -15,7 +15,7 @@ public class AnalyzerTest {
         String sentence = "This is a test sentence.";
         ArrayList<AnalysisResultToken> result = Analyzer.analyzeSyntax(sentence);
         ArrayList<AnalysisResultToken> expected = new ArrayList<>();
-        expected.add(new AnalysisResultToken(0,"This", "DET", "NSUBJ", 1,"TENSE_UNKNOWN"));
+        expected.add(new AnalysisResultToken(0,"this", "DET", "NSUBJ", 1,"TENSE_UNKNOWN"));
         expected.add(new AnalysisResultToken(1,"is", "VERB", "ROOT", 1,"PRESENT"));
         expected.add(new AnalysisResultToken(2,"a", "DET", "DET", 4,"TENSE_UNKNOWN"));
         expected.add(new AnalysisResultToken(3,"test", "NOUN", "NN", 4,"TENSE_UNKNOWN"));
