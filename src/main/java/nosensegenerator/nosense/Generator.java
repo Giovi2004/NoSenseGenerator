@@ -31,29 +31,28 @@ public class Generator {
         ArrayList<String> inputVerbs = inputSentence.getVerbs(time);
         ArrayList<String> inputNouns = inputSentence.getNouns();
         ArrayList<String> inputAdjectives = inputSentence.getAdjectives();
-
         while (filledTemplate.contains("[noun]")) {
             if (Math.random() < 0.5 && inputNouns.size() > 0) {
-                filledTemplate = filledTemplate.replaceFirst("[noun]",
-                        inputNouns.get((int) (Math.random() * (inputNouns.size() - 1))));
+                filledTemplate = filledTemplate.replaceFirst("\\[noun\\]",
+                        inputNouns.get((int) (Math.random() * inputNouns.size())));
             } else {
-                filledTemplate = filledTemplate.replaceFirst("[noun]", nouns.getnoun());
+                filledTemplate = filledTemplate.replaceFirst("\\[noun\\]", nouns.getnoun());
             }
         }
         while (filledTemplate.contains("[verb]")) {
             if (Math.random() < 0.5 && inputVerbs.size() > 0) {
-                filledTemplate = filledTemplate.replaceFirst("[verb]",
+                filledTemplate = filledTemplate.replaceFirst("\\[verb\\]",
                         inputVerbs.get((int) (Math.random() * (inputVerbs.size() - 1))));
             } else {
-                filledTemplate = filledTemplate.replaceFirst("[verb]", verbs.getverb(time));
+                filledTemplate = filledTemplate.replaceFirst("\\[verb\\]", verbs.getverb(time));
             }
         }
         while (filledTemplate.contains("[adjective]")) {
             if (Math.random() < 0.5 && inputAdjectives.size() > 0) {
-                filledTemplate = filledTemplate.replaceFirst("[adjective]",
+                filledTemplate = filledTemplate.replaceFirst("\\[adjective\\]",
                         inputAdjectives.get((int) (Math.random() * (inputAdjectives.size() - 1))));
             } else {
-                filledTemplate = filledTemplate.replaceFirst("[adjective]", adjectives.getAdjective());
+                filledTemplate = filledTemplate.replaceFirst("\\[adjective\\]", adjectives.getAdjective());
             }
         }
         return new Sentence(filledTemplate);
