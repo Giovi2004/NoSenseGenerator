@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
-@SessionAttributes({ "inputSentence", "templateSentence", "generatedSentence", "analysisResult", "toxicityResult" })
+@SessionAttributes({ "inputSentence", "templateSentence", "generatedSentence" })
 public class NoSenseController {
+
     private Generator generator;
 
     public NoSenseController() {
@@ -17,16 +18,13 @@ public class NoSenseController {
     @ModelAttribute
     public void initializeSession(Model model) {
         if (!model.containsAttribute("inputSentence")) {
-            model.addAttribute("inputSentence", "");
+            model.addAttribute("inputSentence", new Sentence(""));
+        }
+        if (!model.containsAttribute("templateSentence")) {
+            model.addAttribute("templateSentence", "");
         }
         if (!model.containsAttribute("generatedSentence")) {
-            model.addAttribute("generatedSentence", "");
-        }
-        if (!model.containsAttribute("analysisResult")) {
-            model.addAttribute("analysisResult", "");
-        }
-        if (!model.containsAttribute("toxicityResult")) {
-            model.addAttribute("toxicityResult", "");
+            model.addAttribute("generatedSentence", new Sentence(""));
         }
     }
 
@@ -36,9 +34,11 @@ public class NoSenseController {
     }
 
     @PostMapping("/analyze")
-    public String analyzeInputSentence(@RequestParam String sentence,
-            @RequestParam(defaultValue = "false") boolean requestSyntacticTree,
-            Model model) {
+    public String analyzeInputSentence(
+        @RequestParam String sentence,
+        @RequestParam(defaultValue = "false") boolean requestSyntacticTree,
+        Model model
+    ) {
         if (sentence.trim().isEmpty()) {
             model.addAttribute("error", "Please enter a sentence to analyze");
             return "index";
@@ -46,50 +46,71 @@ public class NoSenseController {
 
         try {
             Sentence inputSentence = new Sentence(sentence);
-            inputSentence.setAnalysisResultTokens(Analyzer.analyzeSyntax(sentence));
-            String analysisResult = "Analysis completed successfully"; // Replace with actual analysis
+            inputSentence.setAnalysisResultTokens(
+                Analyzer.analyzeSyntax(sentence)
+            );
 
             if (requestSyntacticTree) {
                 // Provide the Syntactic Tree
             }
 
             model.addAttribute("inputSentence", inputSentence);
-            model.addAttribute("analysisResult", analysisResult);
 
             return "index";
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to analyze sentence: " + e.getMessage());
+            model.addAttribute(
+                "error",
+                "Failed to analyze sentence: " + e.getMessage()
+            );
             return "index";
         }
     }
 
     @PostMapping("/generate")
-    public String generateSentence(@RequestParam(required = false, defaultValue = "present") String time,
-            @ModelAttribute("inputSentence") Sentence inputSentence,
-            Model model) {
+    public String generateSentence(
+        @RequestParam(required = false, defaultValue = "present") String time,
+        @ModelAttribute("inputSentence") Sentence inputSentence,
+        Model model
+    ) {
         if (inputSentence == null) {
-            model.addAttribute("error", "No input sentence has been analyzed yet");
+            model.addAttribute(
+                "error",
+                "No input sentence has been analyzed yet"
+            );
             return "index";
         }
 
         try {
-            String templateSentence = generateTemplateSentence();
-            Sentence generatedSentence = generator.fillTemplateSentence(templateSentence, inputSentence, time);
+            String templateSentence = generator.generateTemplateSentence();
+            Sentence generatedSentence = generator.fillTemplateSentence(
+                templateSentence,
+                inputSentence,
+                time
+            );
 
             model.addAttribute("generatedSentence", generatedSentence);
             model.addAttribute("templateSentence", templateSentence);
 
             return "index";
         } catch (Exception e) {
-            model.addAttribute("error", "Error generating sentence: " + e.getMessage());
+            model.addAttribute(
+                "error",
+                "Error generating sentence: " + e.getMessage()
+            );
             return "index";
         }
     }
 
     @PostMapping("/save")
-    public String saveTerms(@ModelAttribute("inputSentence") Sentence inputSentence, Model model) {
+    public String saveTerms(
+        @ModelAttribute("inputSentence") Sentence inputSentence,
+        Model model
+    ) {
         if (inputSentence == null) {
-            model.addAttribute("error", "No sentence to save. Please analyze a sentence first.");
+            model.addAttribute(
+                "error",
+                "No sentence to save. Please analyze a sentence first."
+            );
             return "index";
         }
 
@@ -97,9 +118,13 @@ public class NoSenseController {
             generator.saveFromSentence(inputSentence);
 
             model.addAttribute("success", "Terms saved successfully!");
+
             return "index";
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to save terms: " + e.getMessage());
+            model.addAttribute(
+                "error",
+                "Failed to save terms: " + e.getMessage()
+            );
             return "index";
         }
     }
@@ -111,9 +136,15 @@ public class NoSenseController {
     }
 
     @PostMapping("/toxicity")
-    public String analyzeToxicity(@ModelAttribute("generatedSentence") Sentence generatedSentence, Model model) {
+    public String analyzeToxicity(
+        @ModelAttribute("generatedSentence") Sentence generatedSentence,
+        Model model
+    ) {
         if (generatedSentence == null) {
-            model.addAttribute("error", "No sentence has been generated yet to analyze");
+            model.addAttribute(
+                "error",
+                "No sentence has been generated yet to analyze"
+            );
             return "index";
         }
 
@@ -122,13 +153,11 @@ public class NoSenseController {
             model.addAttribute("toxicityResult", "");
             return "index";
         } catch (Exception e) {
-            model.addAttribute("error", "Error analyzing toxicity: " + e.getMessage());
+            model.addAttribute(
+                "error",
+                "Error analyzing toxicity: " + e.getMessage()
+            );
             return "index";
         }
-    }
-
-    private String generateTemplateSentence() {
-        // this.templateSentence=generator.generateTemplateSentence();
-        return "Generated template sentence placeholder";
     }
 }
