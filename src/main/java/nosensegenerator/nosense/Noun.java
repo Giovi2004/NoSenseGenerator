@@ -12,7 +12,7 @@ public class Noun {
         nouns = FileHandler.load(filePath);
     }
 
-    public String getnoun() {
+    public String getNoun() {
         generatedNumber = (int) (Math.random() * (nouns.size() - 1));
         String noun = nouns.get(generatedNumber);
 

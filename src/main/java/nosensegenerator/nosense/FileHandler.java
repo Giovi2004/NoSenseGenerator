@@ -15,18 +15,22 @@ public class FileHandler {
             return;
         }
         for(int i = 0; i < termsForFile.size(); i++){
+            boolean flag = false;
             for(int j = 0; j < terms.size(); j++){
                 if(!termsForFile.get(i).equals(terms.get(j))){
-                    terms.add(termsForFile.get(i));
-                    try(Writer writer = new FileWriter(filePath, true)){
+                    flag=true; 
+                }
+            }
+            if(flag){
+                terms.add(termsForFile.get(i));
+                try(Writer writer = new FileWriter(filePath, true)){
                         writer.write(termsForFile.get(i) + "\n");
                         writer.close();
                     } 
                     catch (java.io.IOException e){
                         System.err.println("Error writing to file: " + e.getMessage());
-                    } 
-                }
-            }            
+                    }    
+            }         
         }
     }
 

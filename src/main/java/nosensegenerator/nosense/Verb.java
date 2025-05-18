@@ -21,7 +21,7 @@ public class Verb {
         verbsFuture = FileHandler.load(filePathFuture);
     }
 
-    public String getverb(String time) {
+    public String getVerb(String time) {
         switch (time) {
             case "PRESENT":
                 generatedNumber = (int) (Math.random() *

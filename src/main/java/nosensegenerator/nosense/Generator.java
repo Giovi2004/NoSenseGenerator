@@ -36,7 +36,7 @@ public class Generator {
                 filledTemplate = filledTemplate.replaceFirst("\\[noun\\]",
                         inputNouns.get((int) (Math.random() * inputNouns.size())));
             } else {
-                filledTemplate = filledTemplate.replaceFirst("\\[noun\\]", nouns.getnoun());
+                filledTemplate = filledTemplate.replaceFirst("\\[noun\\]", nouns.getNoun());
             }
         }
         while (filledTemplate.contains("[verb]")) {
@@ -44,7 +44,7 @@ public class Generator {
                 filledTemplate = filledTemplate.replaceFirst("\\[verb\\]",
                         inputVerbs.get((int) (Math.random() * (inputVerbs.size() - 1))));
             } else {
-                filledTemplate = filledTemplate.replaceFirst("\\[verb\\]", verbs.getverb(time));
+                filledTemplate = filledTemplate.replaceFirst("\\[verb\\]", verbs.getVerb(time));
             }
         }
         while (filledTemplate.contains("[adjective]")) {
