@@ -7,16 +7,12 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class NounTest {
-    @BeforeAll 
-    public static void setUp() {
-
-    }
+    
     @Test
     public void testGetNoun() {
         ArrayList<String> wordsFromFile = FileHandler.load("src/main/resources/terms/nouns.txt");
@@ -38,7 +34,6 @@ public class NounTest {
         if (lines.size() >= 2) {
             lines.remove(lines.size() - 1);
             Files.write(Paths.get("src/main/resources/terms/nouns.txt"), lines);
-            System.out.println("Penultimate line deleted successfully.");
         }
 
         } catch (Exception e) {}
