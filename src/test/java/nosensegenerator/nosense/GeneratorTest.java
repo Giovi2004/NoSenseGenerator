@@ -37,14 +37,15 @@ public class GeneratorTest {
     public void testFillTemplateSentence() {
         Generator generator = new Generator();
         String template = "The [noun] [verb] under the [adjective] [noun]";
-        Sentence inputSentence = new Sentence("This is a test sentence.");
+        Sentence inputSentence = new Sentence("This is a nice test sentence.");
         ArrayList<AnalysisResultToken> expected = new ArrayList<>();
         expected.add(new AnalysisResultToken(0, "This", "DET", "NSUBJ", 1, "TENSE_UNKNOWN"));
         expected.add(new AnalysisResultToken(1, "is", "VERB", "ROOT", 1, "PRESENT"));
         expected.add(new AnalysisResultToken(2, "a", "DET", "DET", 4, "TENSE_UNKNOWN"));
-        expected.add(new AnalysisResultToken(3, "test", "NOUN", "NN", 4, "TENSE_UNKNOWN"));
-        expected.add(new AnalysisResultToken(4, "sentence", "NOUN", "ATTR", 1, "TENSE_UNKNOWN"));
-        expected.add(new AnalysisResultToken(5, ".", "PUNCT", "P", 1, "TENSE_UNKNOWN"));
+        expected.add(new AnalysisResultToken(3, "nice", "ADJ", "ADJ", 4, "TENSE_UNKNOWN"));
+        expected.add(new AnalysisResultToken(4, "test", "NOUN", "NN", 4, "TENSE_UNKNOWN"));
+        expected.add(new AnalysisResultToken(5, "sentence", "NOUN", "ATTR", 1, "TENSE_UNKNOWN"));
+        expected.add(new AnalysisResultToken(6, ".", "PUNCT", "P", 1, "TENSE_UNKNOWN"));
         inputSentence.setAnalysisResultTokens(expected);
         testSentence(template, "PRESENT", inputSentence, generator);
         testSentence(template, "FUTURE", inputSentence, generator);
@@ -78,6 +79,7 @@ public class GeneratorTest {
         allowedWords.add("test");
         allowedWords.add("sentence");
         allowedWords.add("This");
+        allowedWords.add("nice");
         for (String verb : verbs)
             allowedWords.add(verb);
         for (String noun : nouns)
@@ -95,27 +97,80 @@ public class GeneratorTest {
         assertFalse(filledWords.contains("[adjective]"));
     }
 
-    /*
-     * @Test
-     * public void testSave() {
-     * Noun noun = new Noun();
-     * ArrayList<String> nounsForFile = new ArrayList<>();
-     * nounsForFile.add("testNoun");
-     * noun.save(nounsForFile);
-     * ArrayList<String> loadedNouns =
-     * FileHandler.load("src/main/resources/terms/nouns.txt");
-     * assertEquals(loadedNouns.get(loadedNouns.size()-1), "testNoun");
-     * 
-     * try {
-     * List<String> lines =
-     * Files.readAllLines(Paths.get("src/main/resources/terms/nouns.txt"));
-     * if (lines.size() >= 2) {
-     * lines.remove(lines.size() - 1);
-     * Files.write(Paths.get("src/main/resources/terms/nouns.txt"), lines);
-     * System.out.println("Penultimate line deleted successfully.");
-     * }
-     * 
-     * } catch (Exception e) {}
-     * }
-     */
+    @Test
+    public void testSaveFromSentence() {
+        Generator generator = new Generator();
+        Sentence inputSentence = new Sentence("This is a test sentence.");
+        ArrayList<AnalysisResultToken> expected = new ArrayList<>();
+        expected.add(new AnalysisResultToken(0, "testadj", "ADJ", "NSUBJ", 1, "TENSE_UNKNOWN"));
+        expected.add(new AnalysisResultToken(1, "testpresent", "VERB", "ROOT", 1, "PRESENT"));
+        expected.add(new AnalysisResultToken(1, "testpast", "VERB", "ROOT", 1, "PAST"));
+        expected.add(new AnalysisResultToken(2, "testnoun", "NOUN", "NN", 4, "TENSE_UNKNOWN"));
+        expected.add(new AnalysisResultToken(3, "testfuture", "VERB", "ATTR", 1, "FUTURE"));
+        inputSentence.setAnalysisResultTokens(expected);
+        generator.saveFromSentence(inputSentence);
+        // cleaning files after test
+        ArrayList<String> loadedNouns = FileHandler.load("src/main/resources/terms/nouns.txt");
+        assertEquals(loadedNouns.get(loadedNouns.size() - 1), "testnoun");
+
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/terms/nouns.txt"));
+            if (lines.size() >= 2) {
+                lines.remove(lines.size() - 1);
+                Files.write(Paths.get("src/main/resources/terms/nouns.txt"), lines);
+                System.out.println("Penultimate line deleted successfully.");
+            }
+
+        } catch (Exception e) {
+        }
+        ArrayList<String> loadedAdjectives = FileHandler.load("src/main/resources/terms/adjectives.txt");
+        assertEquals(loadedAdjectives.get(loadedAdjectives.size() - 1), "testadj");
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/terms/adjectives.txt"));
+            if (lines.size() >= 2) {
+                lines.remove(lines.size() - 1);
+                Files.write(Paths.get("src/main/resources/terms/adjectives.txt"), lines);
+                System.out.println("Penultimate line deleted successfully.");
+            }
+
+        } catch (Exception e) {
+        }
+        ArrayList<String> loadedVerbs = FileHandler.load("src/main/resources/terms/verbsPast.txt");
+        assertEquals(loadedVerbs.get(loadedVerbs.size() - 1), "testpast");
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/terms/verbsPast.txt"));
+            if (lines.size() >= 2) {
+                lines.remove(lines.size() - 1);
+                Files.write(Paths.get("src/main/resources/terms/verbsPast.txt"), lines);
+                System.out.println("Penultimate line deleted successfully.");
+            }
+
+        } catch (Exception e) {
+        }
+        ArrayList<String> loadedVerbsPresent = FileHandler.load("src/main/resources/terms/verbsPresent.txt");
+        assertEquals(loadedVerbsPresent.get(loadedVerbsPresent.size() - 1), "testpresent");
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/terms/verbsPresent.txt"));
+            if (lines.size() >= 2) {
+                lines.remove(lines.size() - 1);
+                Files.write(Paths.get("src/main/resources/terms/verbsPresent.txt"), lines);
+                System.out.println("Penultimate line deleted successfully.");
+            }
+
+        } catch (Exception e) {
+        }
+        ArrayList<String> loadedVerbsFuture = FileHandler.load("src/main/resources/terms/verbsFuture.txt");
+        assertEquals(loadedVerbsFuture.get(loadedVerbsFuture.size() - 1), "testfuture");
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/terms/verbsFuture.txt"));
+            if (lines.size() >= 2) {
+                lines.remove(lines.size() - 1);
+                Files.write(Paths.get("src/main/resources/terms/verbsFuture.txt"), lines);
+                System.out.println("Penultimate line deleted successfully.");
+            }
+
+        } catch (Exception e) {
+        }
+
+    }
 }
