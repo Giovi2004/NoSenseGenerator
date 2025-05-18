@@ -1,9 +1,12 @@
 @startuml
+
+
 class NoSenseController {
     -Generator generator
     -Sentence inputSentence
-    -String templateSentence
+    -Sentence templateSentence
     -Sentence generatedSentence
+    -ArrayList<ToxicityResultToken> toxicityResult
     +NoSenseController()
     +void initializeSession(Model model)
     +String index()
@@ -11,8 +14,8 @@ class NoSenseController {
     +String generateSentence(String time, Sentence inputSentence, Model model)
     +String saveTerms(Sentence inputSentence, Model model)
     +String analyzeToxicity(Sentence generatedSentence, Model model)
-    -String generateTemplateSentence()
 }
+
 
 class Noun {
     -ArrayList<String> nouns
