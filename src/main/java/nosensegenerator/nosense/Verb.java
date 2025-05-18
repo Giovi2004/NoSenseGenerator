@@ -4,18 +4,15 @@ import java.util.ArrayList;
 
 public class Verb {
 
-    private ArrayList<String> verbs = new ArrayList<>();
     private ArrayList<String> verbsPresent = new ArrayList<>();
     private ArrayList<String> verbsPast = new ArrayList<>();
     private ArrayList<String> verbsFuture = new ArrayList<>();
     private int generatedNumber = 0;
-    private String filePath = "src/main/resources/terms/verbs.txt";
     private String filePathPresent = "src/main/resources/terms/verbsPresent.txt";
     private String filePathPast = "src/main/resources/terms/verbsPast.txt";
     private String filePathFuture = "src/main/resources/terms/verbsFuture.txt";
 
     public Verb() {
-        verbs = FileHandler.load(filePath);
         verbsPresent = FileHandler.load(filePathPresent);
         verbsPast = FileHandler.load(filePathPast);
         verbsFuture = FileHandler.load(filePathFuture);
@@ -36,8 +33,9 @@ public class Verb {
                     (verbsFuture.size() - 1));
                 return verbsFuture.get(generatedNumber);
             default:
-                generatedNumber = (int) (Math.random() * (verbs.size() - 1));
-                return verbs.get(generatedNumber);
+                generatedNumber = (int) (Math.random() *
+                    (verbsPresent.size() - 1));
+                return verbsPresent.get(generatedNumber);
         }
     }
 
@@ -53,7 +51,7 @@ public class Verb {
                 FileHandler.save(verbsFuture, verbsForFile, filePathFuture);
                 break;
             default:
-                FileHandler.save(verbs, verbsForFile, filePath);
+                FileHandler.save(verbsPresent, verbsForFile, filePathPresent);
                 break;
         }
     }
