@@ -1,5 +1,7 @@
 package nosensegenerator.nosense;
 
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +11,12 @@ import org.springframework.web.bind.support.SessionStatus;
 @Controller
 @SessionAttributes(
     {
+        "sessionId",
         "inputSentence",
         "templateSentence",
         "generatedSentence",
         "toxicityResult",
+        "graphImagePath",
     }
 )
 public class NoSenseController {
@@ -24,7 +28,11 @@ public class NoSenseController {
     }
 
     @ModelAttribute
-    public void initializeSession(Model model) {
+    public void initializeSession(HttpSession session, Model model) {
+        if (!model.containsAttribute("sessionId")) {
+            System.out.println(session.getId());
+            model.addAttribute("sessionId", session.getId());
+        }
         if (!model.containsAttribute("inputSentence")) {
             model.addAttribute("inputSentence", new Sentence(""));
         }
@@ -37,15 +45,19 @@ public class NoSenseController {
         if (!model.containsAttribute("toxicityResult")) {
             model.addAttribute("toxicityResult", null);
         }
+        if (!model.containsAttribute("graphImagePath")) {
+            model.addAttribute("graphImagePath", null);
+        }
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
         return "index";
     }
 
     @PostMapping("/analyze")
     public String analyzeInputSentence(
+        @ModelAttribute("sessionId") String sessionId,
         @RequestParam String sentence,
         @RequestParam(defaultValue = "false") boolean requestSyntacticTree,
         Model model
@@ -61,8 +73,40 @@ public class NoSenseController {
                 Analyzer.analyzeSyntax(sentence)
             );
 
+            // Example tokens (replace with actual tokens)
+
+            ArrayList<AnalysisResultToken> tokens = new ArrayList<>(
+                List.of(
+                    new AnalysisResultToken(0, "Ask", "VERB", "ROOT", 0, ""),
+                    new AnalysisResultToken(1, "not", "ADV", "neg", 0, ""),
+                    new AnalysisResultToken(2, "what", "PRON", "dobj", 6, ""),
+                    new AnalysisResultToken(3, "your", "PRON", "poss", 4, ""),
+                    new AnalysisResultToken(
+                        4,
+                        "country",
+                        "NOUN",
+                        "nsubj",
+                        6,
+                        ""
+                    ),
+                    new AnalysisResultToken(5, "can", "VERB", "aux", 6, ""),
+                    new AnalysisResultToken(6, "do", "VERB", "ROOT", 0, ""),
+                    new AnalysisResultToken(7, "for", "ADP", "prep", 6, ""),
+                    new AnalysisResultToken(8, "you", "PRON", "pobj", 7, "")
+                )
+            );
+
             if (requestSyntacticTree) {
                 // Provide the Syntactic Tree
+                GraphvizGenerator.GenerateDependencyGraph(
+                    //inputSentence.getAnalysisResultTokens(),
+                    tokens,
+                    "graph" + sessionId
+                );
+                model.addAttribute(
+                    "graphImagePath",
+                    GraphvizRenderer.RenderDependencyGraph("graph" + sessionId)
+                );
             }
 
             model.addAttribute("inputSentence", inputSentence);

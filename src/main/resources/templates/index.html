@@ -188,10 +188,23 @@
                                     </h5>
                                     <p
                                         class="card-text"
-                                        th:text="${analysisResult ?: 'Your sentence analysis will appear here'}"
+                                        th:if="${graphImagePath} == null"
                                     >
                                         Your sentence analysis will appear here
                                     </p>
+
+                                    <!-- Display the graph image if available -->
+                                    <div
+                                        class="mb-3"
+                                        th:if="${graphImagePath} != null"
+                                    >
+                                        <img
+                                            th:src="${graphImagePath}"
+                                            alt="Dependency Graph"
+                                            class="img-fluid"
+                                        />
+                                    </div>
+
                                     <form
                                         th:action="@{/save}"
                                         method="post"
