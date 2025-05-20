@@ -1,11 +1,23 @@
 package nosensegenerator.nosense;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
@@ -15,8 +27,8 @@ import org.springframework.web.bind.support.SessionStatus;
         "inputSentence",
         "templateSentence",
         "generatedSentence",
-        "toxicityResult",
-        "graphImagePath",
+        "toxicityResultTokens",
+        "graphImageName",
     }
 )
 public class NoSenseController {
@@ -42,11 +54,11 @@ public class NoSenseController {
         if (!model.containsAttribute("generatedSentence")) {
             model.addAttribute("generatedSentence", new Sentence(""));
         }
-        if (!model.containsAttribute("toxicityResult")) {
-            model.addAttribute("toxicityResult", null);
+        if (!model.containsAttribute("toxicityResultTokens")) {
+            model.addAttribute("toxicityResultTokens", null);
         }
-        if (!model.containsAttribute("graphImagePath")) {
-            model.addAttribute("graphImagePath", null);
+        if (!model.containsAttribute("graphImageName")) {
+            model.addAttribute("graphImageName", null);
         }
     }
 
@@ -73,38 +85,13 @@ public class NoSenseController {
                 Analyzer.analyzeSyntax(sentence)
             );
 
-            // Example tokens (replace with actual tokens)
-
-            ArrayList<AnalysisResultToken> tokens = new ArrayList<>(
-                List.of(
-                    new AnalysisResultToken(0, "Ask", "VERB", "ROOT", 0, ""),
-                    new AnalysisResultToken(1, "not", "ADV", "neg", 0, ""),
-                    new AnalysisResultToken(2, "what", "PRON", "dobj", 6, ""),
-                    new AnalysisResultToken(3, "your", "PRON", "poss", 4, ""),
-                    new AnalysisResultToken(
-                        4,
-                        "country",
-                        "NOUN",
-                        "nsubj",
-                        6,
-                        ""
-                    ),
-                    new AnalysisResultToken(5, "can", "VERB", "aux", 6, ""),
-                    new AnalysisResultToken(6, "do", "VERB", "ROOT", 0, ""),
-                    new AnalysisResultToken(7, "for", "ADP", "prep", 6, ""),
-                    new AnalysisResultToken(8, "you", "PRON", "pobj", 7, "")
-                )
-            );
-
             if (requestSyntacticTree) {
-                // Provide the Syntactic Tree
                 GraphvizGenerator.GenerateDependencyGraph(
-                    //inputSentence.getAnalysisResultTokens(),
-                    tokens,
+                    inputSentence.getAnalysisResultTokens(),
                     "graph" + sessionId
                 );
                 model.addAttribute(
-                    "graphImagePath",
+                    "graphImageName",
                     GraphvizRenderer.RenderDependencyGraph("graph" + sessionId)
                 );
             }
@@ -127,7 +114,7 @@ public class NoSenseController {
         @ModelAttribute("inputSentence") Sentence inputSentence,
         Model model
     ) {
-        if (inputSentence == null || inputSentence.getText().isEmpty()) {
+        if (inputSentence == null || inputSentence.isTextBlank()) {
             model.addAttribute(
                 "error",
                 "No input sentence has been analyzed yet"
@@ -161,7 +148,7 @@ public class NoSenseController {
         @ModelAttribute("inputSentence") Sentence inputSentence,
         Model model
     ) {
-        if (inputSentence == null || inputSentence.getText().isEmpty()) {
+        if (inputSentence == null || inputSentence.isTextBlank()) {
             model.addAttribute(
                 "error",
                 "No sentence to save. Please analyze a sentence first."
@@ -195,9 +182,7 @@ public class NoSenseController {
         @ModelAttribute("generatedSentence") Sentence generatedSentence,
         Model model
     ) {
-        if (
-            generatedSentence == null || generatedSentence.getText().isEmpty()
-        ) {
+        if (generatedSentence == null || generatedSentence.isTextBlank()) {
             model.addAttribute(
                 "error",
                 "No sentence has been generated yet to analyze"
@@ -210,13 +195,10 @@ public class NoSenseController {
                 Analyzer.analyzeToxicity(generatedSentence.getText())
             );
 
-            List<ToxicityResultToken> toxicityResults =
-                generatedSentence.getToxicityResultTokens();
-            ToxicityResultToken lastResult = toxicityResults.get(
-                toxicityResults.size() - 1
+            model.addAttribute(
+                "toxicityResultTokens",
+                generatedSentence.getToxicityResultTokens()
             );
-
-            model.addAttribute("toxicityResult", lastResult);
 
             return "index";
         } catch (Exception e) {
@@ -226,5 +208,23 @@ public class NoSenseController {
             );
             return "index";
         }
+    }
+
+    @GetMapping("/graphs-images/{fileName:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveDependencyGraphImage(
+        @PathVariable String fileName
+    ) throws IOException {
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        Path imagePath = Paths.get(tmpDir, fileName);
+
+        if (!Files.exists(imagePath)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource fileResource = new UrlResource(imagePath.toUri());
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_TYPE, "image/png")
+            .body(fileResource);
     }
 }

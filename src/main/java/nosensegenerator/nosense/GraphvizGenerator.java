@@ -10,7 +10,7 @@ public class GraphvizGenerator {
 
     private static final String TAB = "    ";
     private static final String FILE_PATH =
-        "src/main/resources/static/graphs/(fileName).dot";
+        System.getProperty("java.io.tmpdir") + "/(fileName).dot";
     private static final String NODE_TEMPLATE =
         "(index) [nojustify=true shape=box (label)];\n";
     private static final String LABEL_TEMPLATE =

@@ -3,6 +3,7 @@ package nosensegenerator.nosense;
 import java.util.ArrayList;
 
 public class Sentence {
+
     private String text;
     private ArrayList<AnalysisResultToken> analysisResultTokens;
     private ArrayList<ToxicityResultToken> toxicityResultTokens;
@@ -24,7 +25,9 @@ public class Sentence {
     public ArrayList<String> getVerbs(String tense) {
         ArrayList<String> verbs = new ArrayList<>();
         for (AnalysisResultToken token : analysisResultTokens) {
-            if (token.getTag().equals("VERB") && token.getTense().equals(tense)) {
+            if (
+                token.getTag().equals("VERB") && token.getTense().equals(tense)
+            ) {
                 verbs.add(token.getText());
             }
         }
@@ -55,7 +58,9 @@ public class Sentence {
         return analysisResultTokens;
     }
 
-    public void setAnalysisResultTokens(ArrayList<AnalysisResultToken> analysisResultTokens) {
+    public void setAnalysisResultTokens(
+        ArrayList<AnalysisResultToken> analysisResultTokens
+    ) {
         this.analysisResultTokens = analysisResultTokens;
     }
 
@@ -63,8 +68,13 @@ public class Sentence {
         return toxicityResultTokens;
     }
 
-    public void setToxicityResultTokens(ArrayList<ToxicityResultToken> toxicityResultTokens) {
+    public void setToxicityResultTokens(
+        ArrayList<ToxicityResultToken> toxicityResultTokens
+    ) {
         this.toxicityResultTokens = toxicityResultTokens;
     }
 
+    public boolean isTextBlank() {
+        return text.isBlank();
+    }
 }

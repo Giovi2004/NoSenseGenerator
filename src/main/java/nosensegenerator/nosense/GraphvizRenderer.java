@@ -11,10 +11,10 @@ import java.nio.file.Paths;
 public class GraphvizRenderer {
 
     private static final String DOT_FILE_PATH =
-        "src/main/resources/static/graphs/(fileName).dot";
+        System.getProperty("java.io.tmpdir") + "/(fileName).dot";
     private static final String PNG_FILE_PATH =
-        "src/main/resources/static/images/(fileName).png";
-    private static final String WEB_PATH = "/images/(fileName).png";
+        System.getProperty("java.io.tmpdir") + "/(fileName).png";
+    private static final String WEB_PATH = "(fileName).png";
 
     public static String RenderDependencyGraph(String fileName)
         throws IOException {
