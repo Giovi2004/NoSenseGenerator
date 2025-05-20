@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -76,7 +78,7 @@ public class NoSenseController {
     ) {
         if (sentence.trim().isEmpty()) {
             model.addAttribute("error", "Please enter a sentence to analyze");
-            return "index";
+            return "redirect:/";
         }
 
         try {
@@ -98,13 +100,13 @@ public class NoSenseController {
 
             model.addAttribute("inputSentence", inputSentence);
 
-            return "index";
+            return "redirect:/";
         } catch (Exception e) {
             model.addAttribute(
                 "error",
                 "Failed to analyze sentence: " + e.getMessage()
             );
-            return "index";
+            return "redirect:/";
         }
     }
 
@@ -119,7 +121,7 @@ public class NoSenseController {
                 "error",
                 "No input sentence has been analyzed yet"
             );
-            return "index";
+            return "redirect:/";
         }
 
         try {
@@ -133,13 +135,13 @@ public class NoSenseController {
             model.addAttribute("templateSentence", templateSentence);
             model.addAttribute("generatedSentence", generatedSentence);
 
-            return "index";
+            return "redirect:/";
         } catch (Exception e) {
             model.addAttribute(
                 "error",
                 "Error generating sentence: " + e.getMessage()
             );
-            return "index";
+            return "redirect:/";
         }
     }
 
@@ -153,7 +155,7 @@ public class NoSenseController {
                 "error",
                 "No sentence to save. Please analyze a sentence first."
             );
-            return "index";
+            return "redirect:/";
         }
 
         try {
@@ -161,13 +163,13 @@ public class NoSenseController {
 
             model.addAttribute("success", "Terms saved successfully!");
 
-            return "index";
+            return "redirect:/";
         } catch (Exception e) {
             model.addAttribute(
                 "error",
                 "Failed to save terms: " + e.getMessage()
             );
-            return "index";
+            return "redirect:/";
         }
     }
 
@@ -187,7 +189,7 @@ public class NoSenseController {
                 "error",
                 "No sentence has been generated yet to analyze"
             );
-            return "index";
+            return "redirect:/";
         }
 
         try {
@@ -200,13 +202,13 @@ public class NoSenseController {
                 generatedSentence.getToxicityResultTokens()
             );
 
-            return "index";
+            return "redirect:/";
         } catch (Exception e) {
             model.addAttribute(
                 "error",
                 "Error analyzing toxicity: " + e.getMessage()
             );
-            return "index";
+            return "redirect:/";
         }
     }
 

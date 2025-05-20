@@ -38,7 +38,7 @@ public class GraphvizGenerator {
     private static final String EDGE_TEMPLATE =
         "(tail):(tailPort) -> (head):(headPort) ([options]);\n";
     private static final String CONTROL_NODE =
-        "(index) [shape=point, width=0.01, height=0.01, label=\"\", color=(color)];\n";
+        "(index) [shape=point, width=0.02, height=0.02, label=\"\", color=(color)];\n";
     private static final String GRAPH_TEMPLATE =
         "digraph G {\n" +
         TAB +
