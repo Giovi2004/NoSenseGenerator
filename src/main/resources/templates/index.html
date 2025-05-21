@@ -131,15 +131,31 @@
                                         >
                                             <textarea
                                                 class="form-control h-100"
-                                                th:text="${generatedSentence.getText}"
-                                                placeholder="Generated sentence will appear here"
-                                                style="min-height: 200px"
+                                                th:text="${templateSentence}"
+                                                placeholder="Template sentence will appear here"
+                                                style="min-height: 150px"
                                                 readonly
                                             ></textarea>
-                                            <label
-                                                >Generated sentence will appear
-                                                here</label
-                                            >
+                                            <label>
+                                                Template sentence will appear
+                                                here
+                                            </label>
+                                        </div>
+
+                                        <div
+                                            class="form-floating flex-grow-1 my-3 mx-4"
+                                        >
+                                            <textarea
+                                                class="form-control h-100"
+                                                th:text="${generatedSentence.getText}"
+                                                placeholder="Generated sentence will appear here"
+                                                style="min-height: 150px"
+                                                readonly
+                                            ></textarea>
+                                            <label>
+                                                Generated sentence will appear
+                                                here
+                                            </label>
                                         </div>
 
                                         <div class="mx-4 my-3">
@@ -169,6 +185,7 @@
                                             <button
                                                 type="submit"
                                                 class="btn btn-primary w-100"
+                                                th:disabled="${inputSentence.isTextBlank}"
                                             >
                                                 Generate sentence
                                             </button>
@@ -188,10 +205,23 @@
                                     </h5>
                                     <p
                                         class="card-text"
-                                        th:text="${analysisResult ?: 'Your sentence analysis will appear here'}"
+                                        th:if="${graphImageName} == null"
                                     >
                                         Your sentence analysis will appear here
                                     </p>
+
+                                    <!-- Display the graph image if available -->
+                                    <div
+                                        class="mb-3"
+                                        th:if="${graphImageName} != null"
+                                    >
+                                        <img
+                                            th:src="@{'/graphs-images/' + ${graphImageName}}"
+                                            alt="Dependency Graph"
+                                            class="img-fluid"
+                                        />
+                                    </div>
+
                                     <form
                                         th:action="@{/save}"
                                         method="post"
@@ -200,7 +230,7 @@
                                         <button
                                             type="submit"
                                             class="btn btn-success w-100"
-                                            th:disabled="${inputSentence == null}"
+                                            th:disabled="${inputSentence.isTextBlank}"
                                         >
                                             Save Terms
                                         </button>
@@ -223,32 +253,45 @@
                                         sentence will appear here
                                     </p>
 
-                                    <p
-                                        class="card-text"
-                                        th:if="${toxicityResult != null}"
-                                    >
-                                        <span
-                                            th:text="${toxicityResult.getName}"
-                                        ></span>
-                                    </p>
-
                                     <div
-                                        class="mb-3"
-                                        th:if="${toxicityResult != null}"
+                                        th:each="token : ${toxicityResultTokens}"
                                     >
-                                        <div class="progress">
+                                        <p
+                                            class="card-text"
+                                            th:if="${toxicityResultTokens != null}"
+                                        >
+                                            <span
+                                                th:text="${token.getName}"
+                                            ></span>
+                                        </p>
+
+                                        <div
+                                            class="mb-3"
+                                            th:if="${toxicityResultTokens != null}"
+                                        >
                                             <div
-                                                class="progress-bar"
-                                                role="progressbar"
-                                                th:style="'width: ' + ${toxicityResult.confidencePercentage} + '%'"
-                                                th:classappend="${toxicityResult.confidencePercentage < 50 ? 'bg-success' : (toxicityResult.confidencePercentage < 75 ? 'bg-warning' : 'bg-danger')}"
-                                                th:aria-valuenow="${toxicityResult.confidencePercentage}"
-                                                aria-valuemin="0"
-                                                aria-valuemax="100"
+                                                class="d-flex align-items-center"
                                             >
-                                                <span
-                                                    th:text="${toxicityResult.confidencePercentage + '%'}"
-                                                ></span>
+                                                <span class="me-3 fw-bold"
+                                                    >Confidence:</span
+                                                >
+                                                <div class="flex-grow-1">
+                                                    <div class="progress">
+                                                        <div
+                                                            class="progress-bar"
+                                                            role="progressbar"
+                                                            th:style="'width: ' + ${token.confidencePercentage} + '%'"
+                                                            th:classappend="${token.confidencePercentage < 50 ? 'bg-success' : (token.confidencePercentage < 75 ? 'bg-warning' : 'bg-danger')}"
+                                                            th:aria-valuenow="${token.confidencePercentage}"
+                                                            aria-valuemin="0"
+                                                            aria-valuemax="100"
+                                                        >
+                                                            <span
+                                                                th:text="${token.confidencePercentage + '%'}"
+                                                            ></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -261,6 +304,7 @@
                                         <button
                                             type="submit"
                                             class="btn btn-primary w-100"
+                                            th:disabled="${generatedSentence.isTextBlank}"
                                         >
                                             Analyze Toxicity
                                         </button>
