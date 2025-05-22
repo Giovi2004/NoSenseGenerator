@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class AdjectiveTest {
+public class AdjectivesTest {
     
     @Test
     public void testGetAdjective() {
         ArrayList<String> wordsFromFile = FileHandler.load("src/main/resources/terms/adjectives.txt");
-        Adjective adjective = new Adjective();
+        Adjectives adjective = new Adjectives();
         String generatedAdjective = adjective.getAdjective();
         assertThat(wordsFromFile, hasItem(generatedAdjective));
     }
     @Test
     public void testSave() {
-        Adjective adjective = new Adjective();
+        Adjectives adjective = new Adjectives();
         ArrayList<String> adjectivesForFile = new ArrayList<>();
         adjectivesForFile.add("testAdjective");
         adjective.save(adjectivesForFile);

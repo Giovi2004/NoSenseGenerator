@@ -2,7 +2,7 @@ package nosensegenerator.nosense;
 
 import java.util.ArrayList;
 
-public class Verb {
+public class Verbs {
 
     private ArrayList<String> verbsPresent = new ArrayList<>();
     private ArrayList<String> verbsPast = new ArrayList<>();
@@ -12,7 +12,7 @@ public class Verb {
     private String filePathPast = "src/main/resources/terms/verbsPast.txt";
     private String filePathFuture = "src/main/resources/terms/verbsFuture.txt";
 
-    public Verb() {
+    public Verbs() {
         verbsPresent = FileHandler.load(filePathPresent);
         verbsPast = FileHandler.load(filePathPast);
         verbsFuture = FileHandler.load(filePathFuture);

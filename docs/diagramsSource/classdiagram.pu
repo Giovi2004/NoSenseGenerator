@@ -17,7 +17,7 @@ class NoSenseController {
 }
 
 
-class Noun {
+class Nouns {
     -ArrayList<String> nouns
     -generatedNumber
     -String filePath
@@ -25,7 +25,7 @@ class Noun {
     +String getNoun()
     +void save(ArrayList<String> nounsForFile)
 }
-class Verb {
+class Verbs {
     -ArrayList<String> verbs
     -ArrayList<String> verbsPresent
     -ArrayList<String> verbsPast
@@ -39,7 +39,7 @@ class Verb {
     +String getVerb(String time)
     +void save(String time, ArrayList<String> verbs)
 }
-class Adjective {
+class Adjectives {
     -ArrayList<String> adjectives
     -generatedNumber
     -String filePath
@@ -65,9 +65,9 @@ class Sentence {
 
 class Generator {
     -ArrayList<String> templates
-    -Noun nouns
-    -Verb verbs
-    -Adjective adjectives
+    -Nouns nouns
+    -Verbs verbs
+    -Adjectives adjectives
     -String filePath = "src/main/resources/terms/sentences.txt"
     +Generator()
     +String generateTemplateSentence()
@@ -114,13 +114,13 @@ NoSenseController "1" *-- "many" Sentence : contains
 Generator -->Sentence : generates
 NoSenseController --> Analyzer : uses
 Analyzer --> Sentence : analyzes
-Generator "1" *-- "1" Noun : contains and instantiates
-Generator "1" *-- "1" Verb : contains and instantiates
-Generator "1" *-- "1" Adjective : contains and instantiates
+Generator "1" *-- "1" Nouns : contains and instantiates
+Generator "1" *-- "1" Verbs : contains and instantiates
+Generator "1" *-- "1" Adjectives : contains and instantiates
 NoSenseController "1" *-- "1" Generator : contains and instantiates
-Noun  --> FileHandler : uses
-Verb  --> FileHandler : uses
-Adjective  --> FileHandler : uses
+Nouns  --> FileHandler : uses
+Verbs  --> FileHandler : uses
+Adjectives  --> FileHandler : uses
 Generator  --> FileHandler : uses
 Sentence "1" *-- "many" AnalysisResultToken : contains
 Sentence "1" *-- "many" ToxicityResultToken : contains

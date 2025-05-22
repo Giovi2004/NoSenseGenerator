@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class VerbTest {
+public class VerbsTest {
     
     @Test
     public void testGetVerb() {
-        Verb verb = new Verb();
+        Verbs verb = new Verbs();
         ArrayList<String> wordsFromFilePresent = FileHandler.load("src/main/resources/terms/verbsPresent.txt");
         ArrayList<String> wordsFromFilePast = FileHandler.load("src/main/resources/terms/verbsPast.txt");
         ArrayList<String> wordsFromFileFuture = FileHandler.load("src/main/resources/terms/verbsFuture.txt");
@@ -30,7 +30,7 @@ public class VerbTest {
     }
     @Test
     public void testSave() {
-        Verb verb = new Verb();
+        Verbs verb = new Verbs();
 
         ArrayList<String> verbsForFile = new ArrayList<>();
         verbsForFile.add("testVerb");
