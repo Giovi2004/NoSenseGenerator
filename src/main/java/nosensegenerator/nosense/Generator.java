@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class Generator {
     private ArrayList<String> templates;
-    private Noun nouns;
-    private Verb verbs;
-    private Adjective adjectives;
+    private Nouns nouns;
+    private Verbs verbs;
+    private Adjectives adjectives;
     private String filePath = "src/main/resources/terms/sentences.txt";
 
     public Generator() {
         this.templates = FileHandler.load(this.filePath);
-        this.nouns = new Noun();
-        this.verbs = new Verb();
-        this.adjectives = new Adjective();
+        this.nouns = new Nouns();
+        this.verbs = new Verbs();
+        this.adjectives = new Adjectives();
     }
 
     public String generateTemplateSentence() {

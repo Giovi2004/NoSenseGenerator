@@ -2,13 +2,13 @@ package nosensegenerator.nosense;
 
 import java.util.ArrayList;
 
-public class Noun {
+public class Nouns {
 
     private ArrayList<String> nouns = new ArrayList<>();
     private int generatedNumber = 0;
     private String filePath = "src/main/resources/terms/nouns.txt";
 
-    public Noun() {
+    public Nouns() {
         nouns = FileHandler.load(filePath);
     }
 

@@ -1,0 +1,23 @@
+@startuml
+
+object Analyzer
+object Generator
+object Noun
+object Verb
+object Adjective
+object Template
+object Sentence
+object Program
+
+
+Noun "n" --* "1" Generator : contains
+Verb "n" --* "1" Generator : contains
+Adjective "n" --* "1" Generator : contains
+Template "n" --* "1" Generator : contains
+Program --> Analyzer : uses
+Program --> Generator : uses
+Analyzer --> Sentence : analyzes
+Generator --> Sentence : generates
+Sentence *-- Program : contains
+
+@enduml

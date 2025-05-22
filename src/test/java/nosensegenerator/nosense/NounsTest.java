@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class NounTest {
+public class NounsTest {
     
     @Test
     public void testGetNoun() {
         ArrayList<String> wordsFromFile = FileHandler.load("src/main/resources/terms/nouns.txt");
-        Noun noun = new Noun();
+        Nouns noun = new Nouns();
         String generatedNoun = noun.getNoun();
         assertThat(wordsFromFile, hasItem(generatedNoun));
     }
     @Test
     public void testSave() {
-        Noun noun = new Noun();
+        Nouns noun = new Nouns();
         ArrayList<String> nounsForFile = new ArrayList<>();
         nounsForFile.add("testNoun");
         noun.save(nounsForFile);
