@@ -124,12 +124,11 @@
               <div class="card h-100">
                 <div class="card-body d-flex flex-column">
                   <h5 class="card-title">Your Generation</h5>
-
-                  <form
-                    th:action="@{/generate}"
+                  <form 
+                    th:action="@{/generate-template}"
                     method="post"
-                    class="flex-grow-1 d-flex flex-column"
-                  >
+                    class="flex-grow-1 d-flex flex-column">
+
                     <div class="form-floating flex-grow-1 my-3 mx-4">
                       <textarea
                         class="form-control h-100"
@@ -141,6 +140,23 @@
                       <label> Template sentence will appear here </label>
                     </div>
 
+                    <div class="mt-auto mx-4">
+                      <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                        th:disabled="${inputSentence.isTextBlank}"
+                      >
+                        Generate template
+                      </button>
+                    </div>
+
+                  </form>
+
+                  <form
+                    th:action="@{/fill-template}"
+                    method="post"
+                    class="flex-grow-1 d-flex flex-column"
+                  >
                     <div class="form-floating flex-grow-1 my-3 mx-4">
                       <textarea
                         class="form-control h-100"
@@ -172,7 +188,7 @@
                       <button
                         type="submit"
                         class="btn btn-primary w-100"
-                        th:disabled="${inputSentence.isTextBlank}"
+                        th:disabled="${templateSentence.isBlank}"
                       >
                         Generate sentence
                       </button>

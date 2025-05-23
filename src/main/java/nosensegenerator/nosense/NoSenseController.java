@@ -108,11 +108,6 @@ public class NoSenseController {
             return "redirect:/";
         }
 
-        if (sessionId == null || sessionId.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "No session ID provided");
-            return "redirect:/";
-        }
-
         try {
             model.addAttribute("inputSentence", new Sentence(""));
             model.addAttribute("templateSentence", "");
@@ -135,12 +130,6 @@ public class NoSenseController {
             inputSentence.setAnalysisResultTokens(
                     Analyzer.analyzeSyntax(sentence));
 
-            ArrayList<String> nouns = inputSentence.getNouns();
-            ArrayList<String> verbsPresent = inputSentence.getVerbs("PRESENT");
-            ArrayList<String> verbsPast = inputSentence.getVerbs("PAST");
-            ArrayList<String> verbsFuture = inputSentence.getVerbs("FUTURE");
-            ArrayList<String> adjectives = inputSentence.getAdjectives();
-
             if (requestSyntacticTree) {
                 GraphvizGenerator.GenerateDependencyGraph(
                         inputSentence.getAnalysisResultTokens(),
@@ -150,17 +139,43 @@ public class NoSenseController {
                         GraphvizRenderer.RenderDependencyGraph("graph" + sessionId));
             }
 
-            model.addAttribute("inputSentence", inputSentence);
-            model.addAttribute("nouns", nouns);
-            model.addAttribute("verbsPresent", verbsPresent);
-            model.addAttribute("verbsPast", verbsPast);
-            model.addAttribute("verbsFuture", verbsFuture);
-            model.addAttribute("adjectives", adjectives);
+            if (inputSentence.getAnalysisResultTokens() == null) {
+                redirectAttributes.addFlashAttribute(
+                        "error",
+                        "Failed to analyze sentence. API key not set, please try again later.");
+                return "redirect:/";
+            }
 
+            if (inputSentence.getAnalysisResultTokens().isEmpty()) {
+                redirectAttributes.addFlashAttribute(
+                        "warning",
+                        "No tokens found in the sentence.");
+            }
+
+            for (String attr : List.of("nouns", "verbsPresent", "verbsPast", "verbsFuture", "adjectives")) {
+                try {
+                    if (attr.equals("nouns")) {
+                        model.addAttribute(attr, inputSentence.getNouns());
+                    } else if (attr.equals("verbsPresent")) {
+                        model.addAttribute(attr, inputSentence.getVerbs("PRESENT"));
+                    } else if (attr.equals("verbsPast")) {
+                        model.addAttribute(attr, inputSentence.getVerbs("PAST"));
+                    } else if (attr.equals("verbsFuture")) {
+                        model.addAttribute(attr, inputSentence.getVerbs("FUTURE"));
+                    } else if (attr.equals("adjectives")) {
+                        model.addAttribute(attr, inputSentence.getAdjectives());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            model.addAttribute("inputSentence", inputSentence);
             model.addAttribute("requestSyntacticTree", requestSyntacticTree);
 
             return "redirect:/";
         } catch (Exception e) {
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute(
                     "error",
                     "Failed to analyze sentence: " + e.getMessage());
@@ -168,9 +183,8 @@ public class NoSenseController {
         }
     }
 
-    @PostMapping("/generate")
-    public String generateSentence(
-            @RequestParam(required = false, defaultValue = "PRESENT") String time,
+    @PostMapping("/generate-template")
+    public String generateTemplateSentence(
             @ModelAttribute("inputSentence") Sentence inputSentence,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -181,7 +195,45 @@ public class NoSenseController {
             return "redirect:/";
         }
 
+        try {
+            model.addAttribute("generatedSentence", new Sentence(""));
+            model.addAttribute("toxicityResultTokens", null);
+
+            String templateSentence = generator.generateTemplateSentence();
+
+            model.addAttribute("templateSentence", templateSentence);
+
+            return "redirect:/";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Error generating template sentence: " + e.getMessage());
+            return "redirect:/";
+        }
+    }
+
+    @PostMapping("/fill-template")
+    public String generateSentence(
+            @RequestParam(required = false, defaultValue = "PRESENT") String time,
+            @ModelAttribute("templateSentence") String templateSentence,
+            @ModelAttribute("inputSentence") Sentence inputSentence,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         String normalizedTime = time == null ? "PRESENT" : time.trim().toUpperCase();
+
+        if (inputSentence == null || inputSentence.isTextBlank()) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "No input sentence has been analyzed yet");
+            return "redirect:/";
+        }
+
+        if (templateSentence == null || templateSentence.isBlank()) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "No template sentence has been generated yet");
+            return "redirect:/";
+        }
 
         if (!normalizedTime.equalsIgnoreCase("PRESENT") &&
                 !normalizedTime.equalsIgnoreCase("PAST") &&
@@ -195,15 +247,12 @@ public class NoSenseController {
         try {
             model.addAttribute("toxicityResultTokens", null);
 
-            String templateSentence = generator.generateTemplateSentence();
             Sentence generatedSentence = generator.fillTemplateSentence(
                     templateSentence,
                     inputSentence,
                     normalizedTime);
 
-            model.addAttribute("templateSentence", templateSentence);
             model.addAttribute("generatedSentence", generatedSentence);
-
             model.addAttribute("selectedTime", normalizedTime);
 
             return "redirect:/";
@@ -243,11 +292,10 @@ public class NoSenseController {
                 empty.add("adjectives");
 
             if (empty.size() == 5) {
-                redirectAttributes.addFlashAttribute("error",
+                redirectAttributes.addFlashAttribute("warning",
                         "No terms found to save. Please analyze a more complete sentence.");
-            } else if (!empty.isEmpty()) {
-                redirectAttributes.addFlashAttribute("warning", "Some terms were missing: " + String.join(", ", empty));
-            } else {
+            }
+            else {
                 redirectAttributes.addFlashAttribute("success", "Terms saved successfully!");
             }
 
@@ -281,6 +329,19 @@ public class NoSenseController {
         try {
             generatedSentence.setToxicityResultTokens(
                     Analyzer.analyzeToxicity(generatedSentence.getText()));
+
+            if (generatedSentence.getToxicityResultTokens() == null) {
+                redirectAttributes.addFlashAttribute(
+                        "error",
+                        "Failed to analyze toxicity. API key not set, please try again later.");
+                return "redirect:/";
+            }
+
+            if (generatedSentence.getToxicityResultTokens().isEmpty()) {
+                redirectAttributes.addFlashAttribute(
+                        "warning",
+                        "No tokens found in the sentence.");
+            }
 
             model.addAttribute(
                     "toxicityResultTokens",
