@@ -108,11 +108,6 @@ public class NoSenseController {
             return "redirect:/";
         }
 
-        if (sessionId == null || sessionId.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "No session ID provided");
-            return "redirect:/";
-        }
-
         try {
             model.addAttribute("inputSentence", new Sentence(""));
             model.addAttribute("templateSentence", "");
@@ -243,7 +238,7 @@ public class NoSenseController {
                 empty.add("adjectives");
 
             if (empty.size() == 5) {
-                redirectAttributes.addFlashAttribute("error",
+                redirectAttributes.addFlashAttribute("warning",
                         "No terms found to save. Please analyze a more complete sentence.");
             } else if (!empty.isEmpty()) {
                 redirectAttributes.addFlashAttribute("warning", "Some terms were missing: " + String.join(", ", empty));
