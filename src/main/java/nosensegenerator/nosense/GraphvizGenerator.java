@@ -1,18 +1,27 @@
 package nosensegenerator.nosense;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * This class builds a Graphviz DOT file from a list of AnalysisResultTokens.
+ */
 public class GraphvizGenerator {
 
+    // Space to indent the DOT file
     private static final String TAB = "    ";
+    // Path to the output DOT file, using the system temp directory
+    // Note: Replace (fileName) with the actual file name when calling GenerateDependencyGraph
     private static final String FILE_PATH =
         System.getProperty("java.io.tmpdir") + "/(fileName).dot";
+    
+    // Templates for the various components of the DOT file
+    // Node is the object that contains the important values of each word analyzed by the google NLP API
     private static final String NODE_TEMPLATE =
         "(index) [nojustify=true shape=box (label)];\n";
+    // This creates layout of the node, which is a table with three rows
     private static final String LABEL_TEMPLATE =
         "label=<\n" +
         TAB +
@@ -35,10 +44,22 @@ public class GraphvizGenerator {
         "</TABLE>\n" +
         TAB +
         ">";
+    // This is the template for the edges between nodes, which are the dependencies
+    // The tail and head are the nodes that are connected, and the tailPort and headPort indicate where the edge has to connect to the node, it uses cardinal directions (n, s, e, w, etc.) (_ is automatic)
+    // The options are additional parameters for the edge, such as color or style
     private static final String EDGE_TEMPLATE =
         "(tail):(tailPort) -> (head):(headPort) ([options]);\n";
+    // This node is used to have clearer edges between nodes, it is a colored dot, used to control the edge curvature and height
+    // The index for this type of node is the concatenation of the dependency token and the index of the current token, so it is unique
+    // Example: if the dependency token is 2 and the index is 3, the control node will be named 23
+    // So instead of 2 -> 3, it will be 2 -> 23 -> 3, the node 23 it will be placed higher than the nodes 2 and 3, so the edge will not be straight
     private static final String CONTROL_NODE =
         "(index) [shape=point, width=0.02, height=0.02, label=\"\", color=(color)];\n";
+    // This is the template for the whole graph, it contains the nodes, dependencies, control nodes and subgraph
+    // (nodes) used to draw the nodes with the token attibutes
+    // (dependencies) used to draw the edges between nodes (with the control nodes between them)
+    // (controlNodes) used to draw the control nodes, which are the colored dots that control the edge curvature and height, these nodes are in a subgraph with rank=min, so they are placed at the top of the graph
+    // (subgraph) used to draw invisible edges between nodes in a subgraph, these nodes are placed in the same rank, so they are aligned horizontally, and to mantain the order of the words in the sentence
     private static final String GRAPH_TEMPLATE =
         "digraph G {\n" +
         TAB +
@@ -69,7 +90,7 @@ public class GraphvizGenerator {
         TAB +
         "}\n" +
         "}";
-
+    // List of colors to be used for the control nodes, to differentiate them visually
     private static final List<String> colors = List.of(
         "aqua",
         "aquamarine",
@@ -99,6 +120,12 @@ public class GraphvizGenerator {
         "webpurple"
     );
 
+    /**
+     * Generates a Graphviz DOT file from a list of AnalysisResultTokens.
+     *
+     * @param tokens   The list of AnalysisResultTokens to generate the graph from.
+     * @param fileName The name of the file to save the generated DOT content.
+     */
     public static void GenerateDependencyGraph(
         ArrayList<AnalysisResultToken> tokens,
         String fileName
@@ -157,6 +184,7 @@ public class GraphvizGenerator {
         }
     }
 
+    // Fills the node template with the index and label of the token
     private static String FillNodeTemplate(AnalysisResultToken token) {
         String _node = NODE_TEMPLATE;
 
@@ -166,6 +194,7 @@ public class GraphvizGenerator {
         return _node;
     }
 
+    // Fills the label template with the dependency label, text, and tag of the token
     private static String FillLabelTemplate(AnalysisResultToken token) {
         String _label = LABEL_TEMPLATE;
 
@@ -179,6 +208,7 @@ public class GraphvizGenerator {
         return _label;
     }
 
+    // Fills the edge template with tail, head, tailPort, headPort, and options
     private static String FillEdgeTemplate(
         String tail,
         String head,
@@ -197,6 +227,7 @@ public class GraphvizGenerator {
         return _edge;
     }
 
+    // Fills the control node template with the index and color
     private static String FillControlNode(
         AnalysisResultToken token,
         String color
@@ -213,6 +244,7 @@ public class GraphvizGenerator {
         return _controlNode;
     }
 
+    // Creates the connection of the current token with its dependency token using control nodes and returns the string representation of the edges
     private static String ConnectWithControlNode(
         AnalysisResultToken token,
         String color
@@ -239,6 +271,7 @@ public class GraphvizGenerator {
         return _left + TAB + _right;
     }
 
+    // Helper method to fill the graph template with nodes, dependencies, subgraph, and control nodes
     private static String FillGraphTemplate(
         String _nodes,
         String _dependencies,
@@ -255,6 +288,7 @@ public class GraphvizGenerator {
         return _graph;
     }
 
+    // Clicle through the colors list
     private static int getNextColor(int _color_index) {
         return (_color_index + 1) % colors.size();
     }
