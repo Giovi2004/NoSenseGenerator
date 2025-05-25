@@ -205,21 +205,21 @@
                 <div class="card-body d-flex flex-column">
                   <h5 class="card-title">Sentence Analysis</h5>
                   <p
-                    class="card-text"
+                    class="card-text text-start"
                     th:if="${graphImageName == null and nouns == null and adjectives == null and verbsPresent == null and verbsPast == null and verbsFuture == null}"
                   >
                     Your sentence analysis will appear here
                   </p>
 
                   <!-- Display the extracted words -->
-                  <div class="card-text" th:if="${nouns != null and nouns.size() > 0}">
+                  <div class="card-text text-start" th:if="${nouns != null and nouns.size() > 0}">
                     <h6>Nouns:</h6>
                     <ul>
                       <li th:each="noun : ${nouns}" th:text="${noun}"></li>
                     </ul>
                   </div>
 
-                  <div class="card-text" th:if="${verbs != null and verbs.size() > 0}">
+                  <div class="card-text text-start" th:if="${verbs != null and verbs.size() > 0}">
                     <h6>Verbs:</h6>
                     <ul>
                       <li
@@ -229,7 +229,7 @@
                     </ul>
                   </div>
 
-                  <div class="card-text" th:if="${adjectives != null and adjectives.size() > 0}">
+                  <div class="card-text text-start" th:if="${adjectives != null and adjectives.size() > 0}">
                     <h6>Adjectives:</h6>
                     <ul>
                       <li
@@ -239,7 +239,7 @@
                     </ul>
                   </div>
                   <!-- Display the graph image if available -->
-                  <div class="mb-3" th:if="${graphImageName} != null">
+                  <div class="mb-3 text-start" th:if="${graphImageName} != null">
                     <h6>Dependency Graph:</h6>
                     <img
                       th:src="@{'/graphs-images/' + ${graphImageName}}"
