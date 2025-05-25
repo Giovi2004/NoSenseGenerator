@@ -19,7 +19,7 @@ public class Adjectives {
         return adjective;
     }
 
-    public void save(ArrayList<String> adjectivesForFile) {
-        FileHandler.save(adjectives, adjectivesForFile, filePath);
+    public int save(ArrayList<String> adjectivesForFile) {
+        return FileHandler.save(adjectives, adjectivesForFile, filePath);
     }
 }

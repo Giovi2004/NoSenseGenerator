@@ -19,7 +19,7 @@ public class Nouns {
         return noun;
     }
 
-    public void save(ArrayList<String> nounsForFile) {
-        FileHandler.save(nouns, nounsForFile, filePath);
+    public int save(ArrayList<String> nounsForFile) {
+        return FileHandler.save(nouns, nounsForFile, filePath);
     }
 }

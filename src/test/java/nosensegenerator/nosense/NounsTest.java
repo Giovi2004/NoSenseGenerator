@@ -25,7 +25,8 @@ public class NounsTest {
         Nouns noun = new Nouns();
         ArrayList<String> nounsForFile = new ArrayList<>();
         nounsForFile.add("testNoun");
-        noun.save(nounsForFile);
+        int savedCount=noun.save(nounsForFile);
+        assertEquals(savedCount, 1);
         ArrayList<String> loadedNouns = FileHandler.load("src/main/resources/terms/nouns.txt");
         assertEquals(loadedNouns.get(loadedNouns.size()-1), "testNoun");
 

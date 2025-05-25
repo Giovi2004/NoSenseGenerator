@@ -34,16 +34,20 @@ public class VerbsTest {
 
         ArrayList<String> verbsForFile = new ArrayList<>();
         verbsForFile.add("testVerb");
-        verb.save("PRESENT",verbsForFile);
+        int savedCount=verb.save("PRESENT",verbsForFile);
+        assertEquals(savedCount, 1);
         ArrayList<String> loadedVerbsPresent = FileHandler.load("src/main/resources/terms/verbsPresent.txt");
         assertEquals(loadedVerbsPresent.get(loadedVerbsPresent.size()-1), "testVerb");
-        verb.save("PAST",verbsForFile);
+        savedCount=verb.save("PAST",verbsForFile);
+        assertEquals(savedCount, 1);
         ArrayList<String> loadedVerbsPast = FileHandler.load("src/main/resources/terms/verbsPast.txt");
         assertEquals(loadedVerbsPast.get(loadedVerbsPast.size()-1), "testVerb");
-        verb.save("FUTURE",verbsForFile);
+        savedCount=verb.save("FUTURE",verbsForFile);
+        assertEquals(savedCount, 1);
         ArrayList<String> loadedVerbsFuture = FileHandler.load("src/main/resources/terms/verbsFuture.txt");
         assertEquals(loadedVerbsFuture.get(loadedVerbsFuture.size()-1), "testVerb");
-        verb.save("",verbsForFile);
+        savedCount=verb.save("",verbsForFile);
+        assertEquals(savedCount, 1);
         ArrayList<String> loadedVerbs = FileHandler.load("src/main/resources/terms/verbsPresent.txt");
         assertEquals(loadedVerbs.get(loadedVerbs.size()-1), "testVerb");
 

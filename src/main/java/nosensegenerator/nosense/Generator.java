@@ -60,11 +60,13 @@ public class Generator {
         return new Sentence(filledTemplate);
     }
 
-    public void saveFromSentence(Sentence input) {
-        nouns.save(input.getNouns());
-        adjectives.save(input.getAdjectives());
-        verbs.save("PAST", input.getVerbs("PAST"));
-        verbs.save("PRESENT", input.getVerbs("PRESENT"));
-        verbs.save("FUTURE", input.getVerbs("FUTURE"));
+    public int saveFromSentence(Sentence input) {
+        int savedCount = 0;
+        savedCount+=nouns.save(input.getNouns());
+        savedCount+=adjectives.save(input.getAdjectives());
+        savedCount+=verbs.save("PAST", input.getVerbs("PAST"));
+        savedCount+=verbs.save("PRESENT", input.getVerbs("PRESENT"));
+        savedCount+=verbs.save("FUTURE", input.getVerbs("FUTURE"));
+        return savedCount;
     }
 }

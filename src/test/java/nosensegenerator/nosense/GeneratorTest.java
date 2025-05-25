@@ -108,7 +108,8 @@ public class GeneratorTest {
         expected.add(new AnalysisResultToken(2, "testnoun", "NOUN", "NN", 4, "TENSE_UNKNOWN"));
         expected.add(new AnalysisResultToken(3, "testfuture", "VERB", "ATTR", 1, "FUTURE"));
         inputSentence.setAnalysisResultTokens(expected);
-        generator.saveFromSentence(inputSentence);
+        int savedCount=generator.saveFromSentence(inputSentence);
+        assertEquals(savedCount, 5);
         // cleaning files after test
         ArrayList<String> loadedNouns = FileHandler.load("src/main/resources/terms/nouns.txt");
         assertEquals(loadedNouns.get(loadedNouns.size() - 1), "testnoun");

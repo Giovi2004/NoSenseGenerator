@@ -25,7 +25,8 @@ public class AdjectivesTest {
         Adjectives adjective = new Adjectives();
         ArrayList<String> adjectivesForFile = new ArrayList<>();
         adjectivesForFile.add("testAdjective");
-        adjective.save(adjectivesForFile);
+        int savedCount=adjective.save(adjectivesForFile);
+        assertEquals(savedCount, 1);
         ArrayList<String> loadedAdjectives = FileHandler.load("src/main/resources/terms/adjectives.txt");
         assertEquals(loadedAdjectives.get(loadedAdjectives.size()-1), "testAdjective");
 

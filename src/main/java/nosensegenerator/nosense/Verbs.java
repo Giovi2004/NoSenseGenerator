@@ -39,20 +39,16 @@ public class Verbs {
         }
     }
 
-    public void save(String time, ArrayList<String> verbsForFile) {
+    public int save(String time, ArrayList<String> verbsForFile) {
         switch (time) {
             case "PRESENT":
-                FileHandler.save(verbsPresent, verbsForFile, filePathPresent);
-                break;
+                return FileHandler.save(verbsPresent, verbsForFile, filePathPresent);
             case "PAST":
-                FileHandler.save(verbsPast, verbsForFile, filePathPast);
-                break;
+                return FileHandler.save(verbsPast, verbsForFile, filePathPast);
             case "FUTURE":
-                FileHandler.save(verbsFuture, verbsForFile, filePathFuture);
-                break;
+                return FileHandler.save(verbsFuture, verbsForFile, filePathFuture);
             default:
-                FileHandler.save(verbsPresent, verbsForFile, filePathPresent);
-                break;
+                return FileHandler.save(verbsPresent, verbsForFile, filePathPresent);
         }
     }
 }

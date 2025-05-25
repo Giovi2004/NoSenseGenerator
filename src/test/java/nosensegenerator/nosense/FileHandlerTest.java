@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +33,8 @@ public class FileHandlerTest {
         sampleList.add("test2");
         sampleList.add("test3");
 
-        FileHandler.save(List, sampleList, "src/test/java/nosensegenerator/nosense/test.txt");
+        int savedCount=FileHandler.save(List, sampleList, "src/test/java/nosensegenerator/nosense/test.txt");
+        assertEquals(savedCount,3);
         assertThat(FileHandler.load("src/test/java/nosensegenerator/nosense/test.txt") , hasItems("test", "test1", "test2", "test3"));
                
     }
