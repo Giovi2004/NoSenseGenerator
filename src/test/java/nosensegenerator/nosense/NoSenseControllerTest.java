@@ -30,6 +30,7 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -221,18 +222,15 @@ public class NoSenseControllerTest {
         verify(redirectAttributes).addFlashAttribute("error", "Please enter a sentence to analyze");
     }
 
-    // Test for generateSentence
+    // Test for generateTemplateSentence
     @Test
-    public void testGenerateSentence() {
+    public void testGenerateTemplateSentence() {
         Generator generatorSpy = spy(new Generator());
 
         String mockTemplate = "Every [adjective] [noun] [verb] the [noun]\n";
-
         doReturn(mockTemplate).when(generatorSpy).generateTemplateSentence();
-        doReturn(new Sentence("Every kind dog eats the cat\n")).when(generatorSpy)
-                .fillTemplateSentence(eq(mockTemplate), any(Sentence.class), eq("PRESENT"));
 
-        java.lang.reflect.Field field;
+        Field field;
         try {
             field = NoSenseController.class.getDeclaredField("generator");
             field.setAccessible(true);
@@ -241,7 +239,35 @@ public class NoSenseControllerTest {
             throw new RuntimeException(e);
         }
 
-        String result = controller.generateSentence("PRESENT", new Sentence("This is a test sentence."), model,
+        String result = controller.generateTemplateSentence(model, redirectAttributes);
+        assertEquals("redirect:/", result);
+
+        assertSentenceAttribute("templateSentence", mockTemplate);
+
+        verify(generatorSpy).generateTemplateSentence();
+    }
+
+    // Test for generateSentence
+    @Test
+    public void testGenerateSentence() {
+        Generator generatorSpy = spy(new Generator());
+
+        String mockTemplate = "Every [adjective] [noun] [verb] the [noun]\n";
+
+        doReturn(new Sentence("Every kind dog eats the cat\n")).when(generatorSpy)
+                .fillTemplateSentence(eq(mockTemplate), any(Sentence.class), eq("PRESENT"));
+
+        Field field;
+        try {
+            field = NoSenseController.class.getDeclaredField("generator");
+            field.setAccessible(true);
+            field.set(controller, generatorSpy);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        String result = controller.generateSentence("PRESENT", mockTemplate, new Sentence("This is a test sentence."),
+                model,
                 redirectAttributes);
         assertEquals("redirect:/", result);
 
@@ -255,16 +281,40 @@ public class NoSenseControllerTest {
 
         assertEquals("PRESENT", model.getAttribute("selectedTime"));
 
-        verify(generatorSpy).generateTemplateSentence();
         verify(generatorSpy).fillTemplateSentence(eq(mockTemplate), any(Sentence.class), eq("PRESENT"));
     }
 
     @Test
     public void testGenerateSentence_noInputSentence() {
-        String result = controller.generateSentence("PRESENT", null, model, redirectAttributes);
+        String mockTemplate = "Every [adjective] [noun] [verb] the [noun]\n";
+
+        String result = controller.generateSentence("PRESENT", mockTemplate, null, model, redirectAttributes);
         assertEquals("redirect:/", result);
 
         verify(redirectAttributes).addFlashAttribute("error", "No input sentence has been analyzed yet");
+    }
+
+    @Test
+    public void testGenerateSentence_noTemplate() {
+        String result = controller.generateSentence("PRESENT", null, new Sentence("This is a test sentence."),
+                model,
+                redirectAttributes);
+        assertEquals("redirect:/", result);
+
+        verify(redirectAttributes).addFlashAttribute("error", "No template sentence has been generated yet");
+    }
+
+    @Test
+    public void testGenerateSentence_wrongTimeParam() {
+        String mockTemplate = "Every [adjective] [noun] [verb] the [noun]\n";
+
+        String result = controller.generateSentence("wrongTime", mockTemplate, new Sentence("This is a test sentence."),
+                model,
+                redirectAttributes);
+        assertEquals("redirect:/", result);
+
+        verify(redirectAttributes).addFlashAttribute("error",
+                "Invalid time value. Allowed values are PRESENT, PAST, or FUTURE.");
     }
 
     // Test for saveTerms
