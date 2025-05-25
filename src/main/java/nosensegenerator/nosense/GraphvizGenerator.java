@@ -137,10 +137,13 @@ public class GraphvizGenerator {
         String controlNodes = "";
         int color_index = 0;
 
+        // Create the nodes
         for (AnalysisResultToken token : tokens) {
             nodes = nodes + TAB + FillNodeTemplate(token);
         }
 
+        // Connect the nodes with edges and control nodes
+        // dependencyToken is the index of the token(word) that this token(word) depends on, if it is not equal to the index of the token, it means that it has a dependency
         for (AnalysisResultToken token : tokens) {
             if (token.getDependencyToken() != token.getIndex()) {
                 dependencies =
@@ -157,6 +160,7 @@ public class GraphvizGenerator {
             }
         }
 
+        // Create the subgraph with invisible edges to maintain the order of the words in the sentence
         for (int index = 0; index < tokens.size() - 1; index++) {
             subgraph =
                 subgraph +

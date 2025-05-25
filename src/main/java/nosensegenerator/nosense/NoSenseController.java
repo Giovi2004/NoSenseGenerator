@@ -47,6 +47,13 @@ public class NoSenseController {
         this.generator = new Generator();
     }
 
+    /**
+     * Initializes the session attributes if they are not already set.
+     * This method is called before any request handling methods.
+     *
+     * @param session the current HTTP session
+     * @param model   the model to hold attributes for the view
+     */
     @ModelAttribute
     public void initializeSession(HttpSession session, Model model) {
         if (!model.containsAttribute("sessionId")) {
@@ -96,6 +103,17 @@ public class NoSenseController {
         return "index";
     }
 
+    /**
+     * Handles the analysis of the input sentence.
+     * This method is called when the user submits a sentence for analysis.
+     *
+     * @param sessionId               the session ID
+     * @param sentence                the input sentence to analyze
+     * @param requestSyntacticTree    whether to show or not the syntactic tree
+     * @param model                   the model to hold attributes for the view
+     * @param redirectAttributes      used to pass flash attributes for redirects
+     * @return a redirect to the index page with appropriate attributes set
+     */
     @PostMapping("/analyze")
     public String analyzeInputSentence(
             @ModelAttribute("sessionId") String sessionId,
@@ -109,6 +127,7 @@ public class NoSenseController {
         }
 
         try {
+            // Reset the model attributes for a new analysis
             model.addAttribute("inputSentence", new Sentence(""));
             model.addAttribute("templateSentence", "");
             model.addAttribute("generatedSentence", new Sentence(""));
@@ -183,18 +202,18 @@ public class NoSenseController {
         }
     }
 
+    /**
+     * Handles the generation of a template sentence.
+     * This method is called when the user requests to generate a template sentence.
+     *
+     * @param model                  the model to hold attributes for the view
+     * @param redirectAttributes     used to pass flash attributes for redirects
+     * @return a redirect to the index page with appropriate attributes set
+     */
     @PostMapping("/generate-template")
     public String generateTemplateSentence(
-            @ModelAttribute("inputSentence") Sentence inputSentence,
             Model model,
             RedirectAttributes redirectAttributes) {
-        if (inputSentence == null || inputSentence.isTextBlank()) {
-            redirectAttributes.addFlashAttribute(
-                    "error",
-                    "No input sentence has been analyzed yet");
-            return "redirect:/";
-        }
-
         try {
             model.addAttribute("generatedSentence", new Sentence(""));
             model.addAttribute("toxicityResultTokens", null);
@@ -212,6 +231,17 @@ public class NoSenseController {
         }
     }
 
+    /**
+     * Handles the filling of the template sentence with the result tokens from the analysis of the input sentence.
+     * This method is called when the user submits a request to fill the template.
+     *
+     * @param time                  the time to use for filling (PRESENT, PAST, or FUTURE)
+     * @param templateSentence      the template sentence to fill
+     * @param inputSentence         the input sentence to use for filling
+     * @param model                 the model to hold attributes for the view
+     * @param redirectAttributes    used to pass flash attributes for redirects
+     * @return a redirect to the index page with appropriate attributes set
+     */
     @PostMapping("/fill-template")
     public String generateSentence(
             @RequestParam(required = false, defaultValue = "PRESENT") String time,
@@ -264,6 +294,15 @@ public class NoSenseController {
         }
     }
 
+    /**
+     * Handles the saving of terms from the input sentence.
+     * This method is called when the user submits a request to save terms.
+     *
+     * @param inputSentence         the input sentence to save terms from
+     * @param model                 the model to hold attributes for the view
+     * @param redirectAttributes    used to pass flash attributes for redirects
+     * @return a redirect to the index page with appropriate attributes set
+     */
     @PostMapping("/save")
     public String saveTerms(
             @ModelAttribute("inputSentence") Sentence inputSentence,
@@ -308,12 +347,28 @@ public class NoSenseController {
         }
     }
 
+    /**
+     * Clears the session attributes and resets the session.
+     * This method is called when the user submits a request to clear the session.
+     *
+     * @param sessionStatus       signal that the session processing is complete, ready for cleanup
+     * @return a redirect to the index page
+     */
     @PostMapping("/clear-session")
     public String clearSession(SessionStatus sessionStatus) {
         sessionStatus.setComplete();
         return "redirect:/";
     }
 
+    /**
+     * Analyzes the toxicity of the generated sentence.
+     * This method is called when the user submits a request to analyze toxicity.
+     *
+     * @param generatedSentence   the generated sentence to analyze
+     * @param model               the model to hold attributes for the view
+     * @param redirectAttributes  used to pass flash attributes for redirects
+     * @return a redirect to the index page with appropriate attributes set
+     */
     @PostMapping("/toxicity")
     public String analyzeToxicity(
             @ModelAttribute("generatedSentence") Sentence generatedSentence,
@@ -356,6 +411,14 @@ public class NoSenseController {
         }
     }
 
+    /**
+     * Serves the generated dependency graph image.
+     * This method is called when the user requests to view the dependency graph image.
+     *
+     * @param fileName      the name of the image file to serve
+     * @return a ResponseEntity containing the image resource or a 404 if not found
+     * @throws IOException if an I/O error occurs while accessing the file
+     */
     @GetMapping("/graphs-images/{fileName:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveDependencyGraphImage(
