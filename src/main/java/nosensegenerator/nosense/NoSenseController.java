@@ -99,11 +99,11 @@ public class NoSenseController {
      * Handles the analysis of the input sentence.
      * This method is called when the user submits a sentence for analysis.
      *
-     * @param sessionId               the session ID
-     * @param sentence                the input sentence to analyze
-     * @param requestSyntacticTree    whether to show or not the syntactic tree
-     * @param model                   the model to hold attributes for the view
-     * @param redirectAttributes      used to pass flash attributes for redirects
+     * @param sessionId            the session ID
+     * @param sentence             the input sentence to analyze
+     * @param requestSyntacticTree whether to show or not the syntactic tree
+     * @param model                the model to hold attributes for the view
+     * @param redirectAttributes   used to pass flash attributes for redirects
      * @return a redirect to the index page with appropriate attributes set
      */
     @PostMapping("/analyze")
@@ -192,8 +192,8 @@ public class NoSenseController {
      * Handles the generation of a template sentence.
      * This method is called when the user requests to generate a template sentence.
      *
-     * @param model                  the model to hold attributes for the view
-     * @param redirectAttributes     used to pass flash attributes for redirects
+     * @param model              the model to hold attributes for the view
+     * @param redirectAttributes used to pass flash attributes for redirects
      * @return a redirect to the index page with appropriate attributes set
      */
     @PostMapping("/generate-template")
@@ -218,14 +218,16 @@ public class NoSenseController {
     }
 
     /**
-     * Handles the filling of the template sentence with the result tokens from the analysis of the input sentence.
+     * Handles the filling of the template sentence with the result tokens from the
+     * analysis of the input sentence.
      * This method is called when the user submits a request to fill the template.
      *
-     * @param time                  the time to use for filling (PRESENT, PAST, or FUTURE)
-     * @param templateSentence      the template sentence to fill
-     * @param inputSentence         the input sentence to use for filling
-     * @param model                 the model to hold attributes for the view
-     * @param redirectAttributes    used to pass flash attributes for redirects
+     * @param time               the time to use for filling (PRESENT, PAST, or
+     *                           FUTURE)
+     * @param templateSentence   the template sentence to fill
+     * @param inputSentence      the input sentence to use for filling
+     * @param model              the model to hold attributes for the view
+     * @param redirectAttributes used to pass flash attributes for redirects
      * @return a redirect to the index page with appropriate attributes set
      */
     @PostMapping("/fill-template")
@@ -237,7 +239,8 @@ public class NoSenseController {
             RedirectAttributes redirectAttributes) {
         String normalizedTime = tense == null ? "PRESENT" : tense.trim().toUpperCase();
 
-        if (inputSentence == null || inputSentence.isTextBlank()) {
+        if (inputSentence == null || inputSentence.isTextBlank() ||
+                inputSentence.getAnalysisResultTokens() == null) {
             redirectAttributes.addFlashAttribute(
                     "error",
                     "No input sentence has been analyzed yet");
@@ -284,9 +287,9 @@ public class NoSenseController {
      * Handles the saving of terms from the input sentence.
      * This method is called when the user submits a request to save terms.
      *
-     * @param inputSentence         the input sentence to save terms from
-     * @param model                 the model to hold attributes for the view
-     * @param redirectAttributes    used to pass flash attributes for redirects
+     * @param inputSentence      the input sentence to save terms from
+     * @param model              the model to hold attributes for the view
+     * @param redirectAttributes used to pass flash attributes for redirects
      * @return a redirect to the index page with appropriate attributes set
      */
     @PostMapping("/save")
@@ -294,7 +297,7 @@ public class NoSenseController {
             @ModelAttribute("inputSentence") Sentence inputSentence,
             Model model,
             RedirectAttributes redirectAttributes) {
-        if (inputSentence == null || inputSentence.isTextBlank()) {
+        if (inputSentence == null || inputSentence.isTextBlank() || inputSentence.getAnalysisResultTokens() == null) {
             redirectAttributes.addFlashAttribute(
                     "error",
                     "No sentence to save. Please analyze a sentence first.");
@@ -302,21 +305,18 @@ public class NoSenseController {
         }
 
         try {
-            generator.saveFromSentence(inputSentence);
+            int savedTermsCount = generator.saveFromSentence(inputSentence);
 
-            List<String> empty = new ArrayList<>();
-            if (inputSentence.getNouns().isEmpty())
-                empty.add("nouns");
-            if (inputSentence.getVerbs("").isEmpty())
-                empty.add("verbs");
-            if (inputSentence.getAdjectives().isEmpty())
-                empty.add("adjectives");
-
-            if (empty.size() == 3) {
+            if (savedTermsCount < 0) {
+                redirectAttributes.addFlashAttribute(
+                        "error",
+                        "Failed to save terms. Please try again later.");
+                return "redirect:/";
+            }
+            if (savedTermsCount == 0) {
                 redirectAttributes.addFlashAttribute("warning",
                         "No terms found to save. Please analyze a more complete sentence.");
-            }
-            else {
+            } else {
                 redirectAttributes.addFlashAttribute("success", "Terms saved successfully!");
             }
 
@@ -333,7 +333,8 @@ public class NoSenseController {
      * Clears the session attributes and resets the session.
      * This method is called when the user submits a request to clear the session.
      *
-     * @param sessionStatus       signal that the session processing is complete, ready for cleanup
+     * @param sessionStatus signal that the session processing is complete, ready
+     *                      for cleanup
      * @return a redirect to the index page
      */
     @PostMapping("/clear-session")
@@ -346,9 +347,9 @@ public class NoSenseController {
      * Analyzes the toxicity of the generated sentence.
      * This method is called when the user submits a request to analyze toxicity.
      *
-     * @param generatedSentence   the generated sentence to analyze
-     * @param model               the model to hold attributes for the view
-     * @param redirectAttributes  used to pass flash attributes for redirects
+     * @param generatedSentence  the generated sentence to analyze
+     * @param model              the model to hold attributes for the view
+     * @param redirectAttributes used to pass flash attributes for redirects
      * @return a redirect to the index page with appropriate attributes set
      */
     @PostMapping("/toxicity")
@@ -395,9 +396,10 @@ public class NoSenseController {
 
     /**
      * Serves the generated dependency graph image.
-     * This method is called when the user requests to view the dependency graph image.
+     * This method is called when the user requests to view the dependency graph
+     * image.
      *
-     * @param fileName      the name of the image file to serve
+     * @param fileName the name of the image file to serve
      * @return a ResponseEntity containing the image resource or a 404 if not found
      * @throws IOException if an I/O error occurs while accessing the file
      */

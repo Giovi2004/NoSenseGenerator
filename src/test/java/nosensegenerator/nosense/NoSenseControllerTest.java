@@ -37,7 +37,6 @@ import java.nio.file.Paths;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -133,7 +132,7 @@ public class NoSenseControllerTest {
         // Attributes expected to be null
         for (String attr : List.of(
                 "toxicityResultTokens", "graphImageName", "nouns",
-                "verbsPresent", "verbsPast", "verbsFuture", "adjectives")) {
+                "verbs", "adjectives")) {
             assertTrue(model.containsAttribute(attr));
             assertNull(model.getAttribute(attr));
         }
@@ -183,18 +182,14 @@ public class NoSenseControllerTest {
             assertEquals(true, model.getAttribute("requestSyntacticTree"));
 
             for (String attr : List.of(
-                    "nouns", "verbsPresent", "verbsPast", "verbsFuture", "adjectives")) {
+                    "nouns", "verbs", "adjectives")) {
                 ArrayList<String> words = new ArrayList<>();
                 if (attr.equals("nouns")) {
                     words.add("dog");
                 }
-                if (attr.equals("verbsPresent")) {
+                if (attr.equals("verbs")) {
                     words.add("eats");
-                }
-                if (attr.equals("verbsPast")) {
                     words.add("ate");
-                }
-                if (attr.equals("verbsFuture")) {
                     words.add("will eat");
                 }
                 if (attr.equals("adjectives")) {
@@ -336,7 +331,7 @@ public class NoSenseControllerTest {
             throw new RuntimeException(e);
         }
 
-        doNothing().when(generatorSpy).saveFromSentence(any(Sentence.class));
+        doReturn(mockAnalysisResultTokens.size()).when(generatorSpy).saveFromSentence(any(Sentence.class));
 
         String result = controller.saveTerms(mockSentence, model, redirectAttributes);
         assertEquals("redirect:/", result);
@@ -359,7 +354,7 @@ public class NoSenseControllerTest {
             throw new RuntimeException(e);
         }
 
-        doNothing().when(generatorSpy).saveFromSentence(any(Sentence.class));
+        doReturn(0).when(generatorSpy).saveFromSentence(any(Sentence.class));
 
         String result = controller.saveTerms(mockSentence, model, redirectAttributes);
         assertEquals("redirect:/", result);
@@ -388,7 +383,7 @@ public class NoSenseControllerTest {
             throw new RuntimeException(e);
         }
 
-        doNothing().when(generatorSpy).saveFromSentence(any(Sentence.class));
+        doReturn(mockAnalysisResultTokens.size()).when(generatorSpy).saveFromSentence(any(Sentence.class));
 
         String result = controller.saveTerms(mockSentence, model, redirectAttributes);
         assertEquals("redirect:/", result);
