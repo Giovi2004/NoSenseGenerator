@@ -110,7 +110,7 @@ These instructions will give you a copy of the project up and running on your lo
 
 1. Get an API Key at [Google Cloud](https://cloud.google.com/natural-language?hl=en)
 2. Clone the repo
-   ```sh
+   ```shell
    git clone https://github.com/Giovi2004/NoSenseGenerator.git
    ```
 3. Enter your API in `application.properties`
@@ -138,6 +138,19 @@ These instructions will give you a copy of the project up and running on your lo
         java -jar target/nosense.jar
         ```
 
+
+
+### Development
+
+For the tests report run in the root folder of the project
+   ``` shell
+   mvn site
+   ```
+
+This will generate HTML reports in `target/site directory`. Open the `surefire-report.html` file in the browser. You will get an output like below image.
+
+![Test Report HTML][test-screenshot]
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -147,7 +160,7 @@ These instructions will give you a copy of the project up and running on your lo
 
 This is the main page where you can interact with Google APIs to analyze, and generate nonsense sentences. Follow the steps below to use the user interface:
 
-![Product Name Screen Shot][index-screenshot]
+![Home Page Screen Shot][index-screenshot]
 
 **Example usage:**
 
@@ -208,3 +221,4 @@ This software uses the following packages:
 [Spring-Boot-url]: https://spring.io/
 
 [index-screenshot]: images/index-screenshot.png
+[test-screenshot]: images/test-screenshot.png
