@@ -212,39 +212,24 @@
                   </p>
 
                   <!-- Display the extracted words -->
-                  <div class="card-text" th:if="${nouns != null}">
+                  <div class="card-text" th:if="${nouns != null and nouns.size() > 0}">
                     <h6>Nouns:</h6>
                     <ul>
                       <li th:each="noun : ${nouns}" th:text="${noun}"></li>
                     </ul>
                   </div>
 
-                  <div class="card-text" th:if="${verbsPresent != null}">
-                    <h6>Verbs (Present):</h6>
+                  <div class="card-text" th:if="${verbs != null and verbs.size() > 0}">
+                    <h6>Verbs:</h6>
                     <ul>
                       <li
-                        th:each="verb : ${verbsPresent}"
-                        th:text="${verb}"
-                      ></li>
-                    </ul>
-                  </div>
-                  <div class="card-text" th:if="${verbsPast != null}">
-                    <h6>Verbs (Past):</h6>
-                    <ul>
-                      <li th:each="verb : ${verbsPast}" th:text="${verb}"></li>
-                    </ul>
-                  </div>
-                  <div class="card-text" th:if="${verbsFuture != null}">
-                    <h6>Verbs (Future):</h6>
-                    <ul>
-                      <li
-                        th:each="verb : ${verbsFuture}"
+                        th:each="verb : ${verbs}"
                         th:text="${verb}"
                       ></li>
                     </ul>
                   </div>
 
-                  <div class="card-text" th:if="${adjectives != null}">
+                  <div class="card-text" th:if="${adjectives != null and adjectives.size() > 0}">
                     <h6>Adjectives:</h6>
                     <ul>
                       <li
@@ -255,6 +240,7 @@
                   </div>
                   <!-- Display the graph image if available -->
                   <div class="mb-3" th:if="${graphImageName} != null">
+                    <h6>Dependency Graph:</h6>
                     <img
                       th:src="@{'/graphs-images/' + ${graphImageName}}"
                       alt="Dependency Graph"

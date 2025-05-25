@@ -32,9 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
         "toxicityResultTokens",
         "graphImageName",
         "nouns",
-        "verbsPresent",
-        "verbsPast",
-        "verbsFuture",
+        "verbs",
         "adjectives",
         "requestSyntacticTree",
         "selectedTime"
@@ -78,14 +76,8 @@ public class NoSenseController {
         if (!model.containsAttribute("nouns")) {
             model.addAttribute("nouns", null);
         }
-        if (!model.containsAttribute("verbsPresent")) {
-            model.addAttribute("verbsPresent", null);
-        }
-        if (!model.containsAttribute("verbsPast")) {
-            model.addAttribute("verbsPast", null);
-        }
-        if (!model.containsAttribute("verbsFuture")) {
-            model.addAttribute("verbsFuture", null);
+        if (!model.containsAttribute("verbs")) {
+            model.addAttribute("verbs", null);
         }
         if (!model.containsAttribute("adjectives")) {
             model.addAttribute("adjectives", null);
@@ -134,9 +126,7 @@ public class NoSenseController {
 
             // Should not be needed, but just in case
             model.addAttribute("nouns", null);
-            model.addAttribute("verbsPresent", null);
-            model.addAttribute("verbsPast", null);
-            model.addAttribute("verbsFuture", null);
+            model.addAttribute("verbs", null);
             model.addAttribute("adjectives", null);
 
             model.addAttribute("toxicityResultTokens", null);
@@ -171,16 +161,12 @@ public class NoSenseController {
                         "No tokens found in the sentence.");
             }
 
-            for (String attr : List.of("nouns", "verbsPresent", "verbsPast", "verbsFuture", "adjectives")) {
+            for (String attr : List.of("nouns", "verbs", "adjectives")) {
                 try {
                     if (attr.equals("nouns")) {
                         model.addAttribute(attr, inputSentence.getNouns());
-                    } else if (attr.equals("verbsPresent")) {
-                        model.addAttribute(attr, inputSentence.getVerbs("PRESENT"));
-                    } else if (attr.equals("verbsPast")) {
-                        model.addAttribute(attr, inputSentence.getVerbs("PAST"));
-                    } else if (attr.equals("verbsFuture")) {
-                        model.addAttribute(attr, inputSentence.getVerbs("FUTURE"));
+                    } else if (attr.equals("verbs")) {
+                        model.addAttribute(attr, inputSentence.getVerbs(""));
                     } else if (attr.equals("adjectives")) {
                         model.addAttribute(attr, inputSentence.getAdjectives());
                     }
@@ -244,12 +230,12 @@ public class NoSenseController {
      */
     @PostMapping("/fill-template")
     public String generateSentence(
-            @RequestParam(required = false, defaultValue = "PRESENT") String time,
+            @RequestParam(required = false, defaultValue = "PRESENT") String tense,
             @ModelAttribute("templateSentence") String templateSentence,
             @ModelAttribute("inputSentence") Sentence inputSentence,
             Model model,
             RedirectAttributes redirectAttributes) {
-        String normalizedTime = time == null ? "PRESENT" : time.trim().toUpperCase();
+        String normalizedTime = tense == null ? "PRESENT" : tense.trim().toUpperCase();
 
         if (inputSentence == null || inputSentence.isTextBlank()) {
             redirectAttributes.addFlashAttribute(
