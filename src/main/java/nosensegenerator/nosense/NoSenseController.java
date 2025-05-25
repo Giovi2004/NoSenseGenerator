@@ -367,18 +367,13 @@ public class NoSenseController {
             ArrayList<ToxicityResultToken> toxicityResultTokens = Analyzer.analyzeToxicity(generatedSentence.getText());
             generatedSentence.setToxicityResultTokens(toxicityResultTokens);
 
-            if (toxicityResultTokens == null) {
+            if (toxicityResultTokens == null || toxicityResultTokens.isEmpty()) {
                 redirectAttributes.addFlashAttribute(
                         "error",
                         "Failed to analyze toxicity. API key not set, please try again later.");
                 return "redirect:/";
             }
 
-            if (toxicityResultTokens.isEmpty()) {
-                redirectAttributes.addFlashAttribute(
-                        "warning",
-                        "No tokens found in the sentence.");
-            }
 
             model.addAttribute(
                     "toxicityResultTokens",
