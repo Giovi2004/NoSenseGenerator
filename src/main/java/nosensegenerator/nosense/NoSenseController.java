@@ -307,16 +307,12 @@ public class NoSenseController {
             List<String> empty = new ArrayList<>();
             if (inputSentence.getNouns().isEmpty())
                 empty.add("nouns");
-            if (inputSentence.getVerbs("PRESENT").isEmpty())
-                empty.add("present verbs");
-            if (inputSentence.getVerbs("PAST").isEmpty())
-                empty.add("past verbs");
-            if (inputSentence.getVerbs("FUTURE").isEmpty())
-                empty.add("future verbs");
+            if (inputSentence.getVerbs("").isEmpty())
+                empty.add("verbs");
             if (inputSentence.getAdjectives().isEmpty())
                 empty.add("adjectives");
 
-            if (empty.size() == 5) {
+            if (empty.size() == 3) {
                 redirectAttributes.addFlashAttribute("warning",
                         "No terms found to save. Please analyze a more complete sentence.");
             }
