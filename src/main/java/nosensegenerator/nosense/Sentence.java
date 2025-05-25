@@ -24,7 +24,7 @@ public class Sentence {
 
     public ArrayList<String> getVerbs(String tense) {
         ArrayList<String> verbs = new ArrayList<>();
-        if (tense != "PRESENT" && tense != "PAST" && tense != "FUTURE") {
+        if (!tense.equals("PRESENT" ) && !tense.equals("PAST" ) && !tense.equals("FUTURE" )) {
             for (AnalysisResultToken token : analysisResultTokens) {
                 if (token.getTag().equals("VERB")) {
                     verbs.add(token.getText());
