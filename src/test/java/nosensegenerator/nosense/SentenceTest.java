@@ -65,8 +65,11 @@ public class SentenceTest {
         ArrayList<String> verbs3 = sentence.getVerbs("PAST");
         assertEquals(1, verbs3.size());
         assertThat(verbs3, hasItem("test5"));
-        ArrayList<String> verbs4 = sentence.getVerbs("tense");
-        assertEquals(0, verbs4.size());
+        ArrayList<String> verbs5 = sentence.getVerbs("");
+        assertEquals(3, verbs5.size());
+        assertThat(verbs5, hasItem("test2"));
+        assertThat(verbs5, hasItem("test4"));
+        assertThat(verbs5, hasItem("test5"));
     }
 
     @Test

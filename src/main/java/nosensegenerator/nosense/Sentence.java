@@ -24,13 +24,20 @@ public class Sentence {
 
     public ArrayList<String> getVerbs(String tense) {
         ArrayList<String> verbs = new ArrayList<>();
-        for (AnalysisResultToken token : analysisResultTokens) {
-            if (
-                token.getTag().equals("VERB") && token.getTense().equals(tense)
-            ) {
-                verbs.add(token.getText());
+        if (tense != "PRESENT" && tense != "PAST" && tense != "FUTURE") {
+            for (AnalysisResultToken token : analysisResultTokens) {
+                if (token.getTag().equals("VERB")) {
+                    verbs.add(token.getText());
+                }
+            }
+        } else {
+            for (AnalysisResultToken token : analysisResultTokens) {
+                if (token.getTag().equals("VERB") && token.getTense().equals(tense)) {
+                    verbs.add(token.getText());
+                }
             }
         }
+
         return verbs;
     }
 
@@ -59,8 +66,7 @@ public class Sentence {
     }
 
     public void setAnalysisResultTokens(
-        ArrayList<AnalysisResultToken> analysisResultTokens
-    ) {
+            ArrayList<AnalysisResultToken> analysisResultTokens) {
         this.analysisResultTokens = analysisResultTokens;
     }
 
@@ -69,8 +75,7 @@ public class Sentence {
     }
 
     public void setToxicityResultTokens(
-        ArrayList<ToxicityResultToken> toxicityResultTokens
-    ) {
+            ArrayList<ToxicityResultToken> toxicityResultTokens) {
         this.toxicityResultTokens = toxicityResultTokens;
     }
 
