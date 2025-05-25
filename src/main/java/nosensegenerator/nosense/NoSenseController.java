@@ -135,27 +135,26 @@ public class NoSenseController {
             model.addAttribute("selectedTime", "PRESENT");
 
             Sentence inputSentence = new Sentence(sentence);
-
-            inputSentence.setAnalysisResultTokens(
-                    Analyzer.analyzeSyntax(sentence));
+            ArrayList<AnalysisResultToken> analysisResultTokens = Analyzer.analyzeSyntax(sentence);
+            inputSentence.setAnalysisResultTokens(analysisResultTokens);
 
             if (requestSyntacticTree) {
                 GraphvizGenerator.GenerateDependencyGraph(
-                        inputSentence.getAnalysisResultTokens(),
+                        analysisResultTokens,
                         "graph" + sessionId);
                 model.addAttribute(
                         "graphImageName",
                         GraphvizRenderer.RenderDependencyGraph("graph" + sessionId));
             }
 
-            if (inputSentence.getAnalysisResultTokens() == null) {
+            if (analysisResultTokens == null) {
                 redirectAttributes.addFlashAttribute(
                         "error",
                         "Failed to analyze sentence. API key not set, please try again later.");
                 return "redirect:/";
             }
 
-            if (inputSentence.getAnalysisResultTokens().isEmpty()) {
+            if (analysisResultTokens.isEmpty()) {
                 redirectAttributes.addFlashAttribute(
                         "warning",
                         "No tokens found in the sentence.");
@@ -365,17 +364,17 @@ public class NoSenseController {
         }
 
         try {
-            generatedSentence.setToxicityResultTokens(
-                    Analyzer.analyzeToxicity(generatedSentence.getText()));
+            ArrayList<ToxicityResultToken> toxicityResultTokens = Analyzer.analyzeToxicity(generatedSentence.getText());
+            generatedSentence.setToxicityResultTokens(toxicityResultTokens);
 
-            if (generatedSentence.getToxicityResultTokens() == null) {
+            if (toxicityResultTokens == null) {
                 redirectAttributes.addFlashAttribute(
                         "error",
                         "Failed to analyze toxicity. API key not set, please try again later.");
                 return "redirect:/";
             }
 
-            if (generatedSentence.getToxicityResultTokens().isEmpty()) {
+            if (toxicityResultTokens.isEmpty()) {
                 redirectAttributes.addFlashAttribute(
                         "warning",
                         "No tokens found in the sentence.");
@@ -383,7 +382,7 @@ public class NoSenseController {
 
             model.addAttribute(
                     "toxicityResultTokens",
-                    generatedSentence.getToxicityResultTokens());
+                    toxicityResultTokens);
 
             return "redirect:/";
         } catch (Exception e) {
