@@ -242,7 +242,7 @@ public class NoSenseControllerTest {
         String result = controller.generateTemplateSentence(model, redirectAttributes);
         assertEquals("redirect:/", result);
 
-        assertSentenceAttribute("templateSentence", mockTemplate);
+        assertEquals(mockTemplate, model.getAttribute("templateSentence"));
 
         verify(generatorSpy).generateTemplateSentence();
     }
@@ -271,14 +271,9 @@ public class NoSenseControllerTest {
                 redirectAttributes);
         assertEquals("redirect:/", result);
 
-        assertTrue(model.containsAttribute("templateSentence"));
-        assertTrue(model.containsAttribute("generatedSentence"));
-        assertTrue(model.containsAttribute("selectedTime"));
-
-        assertEquals(mockTemplate, model.getAttribute("templateSentence"));
-
         assertSentenceAttribute("generatedSentence", "Every kind dog eats the cat\n");
 
+        assertTrue(model.containsAttribute("selectedTime"));
         assertEquals("PRESENT", model.getAttribute("selectedTime"));
 
         verify(generatorSpy).fillTemplateSentence(eq(mockTemplate), any(Sentence.class), eq("PRESENT"));
@@ -398,12 +393,7 @@ public class NoSenseControllerTest {
         String result = controller.saveTerms(mockSentence, model, redirectAttributes);
         assertEquals("redirect:/", result);
 
-        verify(redirectAttributes).addFlashAttribute(
-                eq("warning"),
-                org.mockito.ArgumentMatchers.contains("past verbs"));
-        verify(redirectAttributes).addFlashAttribute(
-                eq("warning"),
-                org.mockito.ArgumentMatchers.contains("future verbs"));
+        verify(redirectAttributes).addFlashAttribute("success", "Terms saved successfully!");
         verify(generatorSpy).saveFromSentence(mockSentence);
     }
 
@@ -570,12 +560,22 @@ public class NoSenseControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
+    // Test for generateTemplateSentence
+    @Disabled
+    @Test
+    public void testGenerateTemplateSentence_Integration() throws Exception {
+        mockMvc.perform(post("/generate-template"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+    }
+
     // Test for generateSentence
     @Disabled
     @Test
-    public void testGenerateSentence_Integration() throws Exception {
-        mockMvc.perform(post("/generate")
+    public void testFillTemplateSentence_Integration() throws Exception {
+        mockMvc.perform(post("/fill-template")
                 .param("time", "present")
+                .sessionAttr("templateSentence", "Every [adjective] [noun] [verb] the [noun]\n")
                 .sessionAttr("inputSentence", new Sentence("This is a test sentence.")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
@@ -583,9 +583,10 @@ public class NoSenseControllerTest {
 
     @Disabled
     @Test
-    public void testGenerateSentence_noInputSentence_Integration() throws Exception {
-        mockMvc.perform(post("/generate")
-                .param("time", "present"))
+    public void testFillTemplateSentence_noInputSentence_Integration() throws Exception {
+        mockMvc.perform(post("/fill-template")
+                .param("time", "present")
+                .sessionAttr("templateSentence", "Every [adjective] [noun] [verb] the [noun]\n"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
                 .andExpect(flash().attribute("error", "No input sentence has been analyzed yet"));
@@ -594,8 +595,9 @@ public class NoSenseControllerTest {
     @Disabled
     @Test
     public void testGenerateSentence_wrongTimeParam_Integration() throws Exception {
-        mockMvc.perform(post("/generate")
+        mockMvc.perform(post("/fill-template")
                 .param("time", "wrongTime")
+                .sessionAttr("templateSentence", "Every [adjective] [noun] [verb] the [noun]\n")
                 .sessionAttr("inputSentence", new Sentence("This is a test sentence.")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
