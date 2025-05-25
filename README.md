@@ -102,7 +102,9 @@ These instructions will give you a copy of the project up and running on your lo
     sudo pacman -S jdk-openjdk
     ```
 
-2. Install graphviz, you can find the installation instructions [here](https://graphviz.org/download/).
+2. Install Maven, you can find the installation instructions [here](https://maven.apache.org/install.html).
+
+3. Install graphviz, you can find the installation instructions [here](https://graphviz.org/download/).
 
 
 
