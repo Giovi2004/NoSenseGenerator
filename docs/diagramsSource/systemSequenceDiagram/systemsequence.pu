@@ -1,0 +1,157 @@
+@startuml SentenceAnalysis
+hide footbox
+skinparam sequenceMessageAlign center
+title System Sequence Diagram: Sentence Analysis
+
+actor User
+participant "NoSense\nSystem" as System
+
+User -> System: input sentence
+User -> System: select syntactic tree option
+activate System
+
+alt Empty Input
+    System --> User: display error "Please enter a sentence to analyze"
+else Valid Input
+    note right of System
+      Internal steps:
+      1. Save input sentence
+      2. Validate sentence structure (via Google API)
+      3. Extract nouns, verbs, adjectives
+    end note
+
+    alt Analysis Failed
+        System --> User: display error "Failed to analyze sentence. API key not set, please try again later."
+    else Analysis Success
+        alt Empty Analysis Results
+            System --> User: display warning "No tokens found in the sentence."
+        else Not Empty Analysis Results
+            System --> User: display extracted terms\n(nouns, verbs, adjectives)
+        end
+    end
+
+    alt Syntactic Tree Requested
+        note right of System
+            Internal steps:
+            1. Generate the syntactic tree graph (DOT)
+            2. Render the graph (with graphviz) and save it
+        end note
+        
+        System --> User: display syntactic tree analysis
+    end
+end
+deactivate System
+
+@enduml
+
+@startuml TermStorage
+hide footbox
+skinparam sequenceMessageAlign center
+title System Sequence Diagram: Terms Storage
+
+actor User
+participant "NoSense\nSystem" as System
+
+User -> System: request to save terms
+activate System
+alt No sentence to save
+    System --> User: display error "Please enter a sentence to analyze"
+else Valid Input
+    note right of System
+      Internal steps:
+      1. Save nouns, verbs, adjectives
+    end note
+
+    alt Error while saving terms
+        System --> User: display error "Failed to save terms. Please try again later."
+    else No terms where saved
+        System --> User: display warning "No terms found to save. Please analyze a more complete sentence."
+    else Terms saved successfully
+        System --> User: display success "Terms saved successfully!"
+    end
+end
+deactivate System
+
+@enduml
+
+@startuml SentenceTemplateGeneration
+hide footbox
+skinparam sequenceMessageAlign center
+title System Sequence Diagram: Sentence Generation
+
+actor User
+participant "NoSense\nSystem" as System
+
+User -> System: request to generate the sentence template
+activate System
+
+note right of System
+    Internal steps:
+    1. Generate template
+end note
+System --> User: display generated sentence
+deactivate System
+
+@enduml
+
+@startuml FillSentenceTemplate
+hide footbox
+skinparam sequenceMessageAlign center
+title System Sequence Diagram: Sentence Generation
+
+actor User
+participant "NoSense\nSystem" as System
+
+User -> System: request to fill the generated sentence template with the selected verbal tense and the terms from the analyzed sentence
+activate System
+
+alt No analyzed input sentence
+    System --> User: display error "No input sentence has been analyzed yet"
+else No generated template sentence
+    System --> User: display error "No template sentence has been generated yet"
+else Wrong time tense
+    System --> User: display error "Invalid time value. Allowed values are PRESENT, PAST, or FUTURE."
+else Valid Input
+    note right of System
+      Internal steps:
+      1. Retrieve sentence template
+      2. Retrieve saved terms (nouns, verbs, adjectives)
+      3. Apply selected verbal tense to verbs
+      4. Fill template with terms
+    end note
+    System --> User: display generated sentence
+end
+
+deactivate System
+
+@enduml
+
+@startuml ToxicityAnalysis
+hide footbox
+skinparam sequenceMessageAlign center
+title System Sequence Diagram: Toxicity Analysis
+
+actor User
+participant "NoSense\nSystem" as System
+
+User -> System: request toxicity analysis
+activate System
+
+alt No Generated Sentence Analyzed
+    System --> User: display error "No sentence has been generated yet to analyze"
+else Valid Input
+    note right of System
+      Internal steps:
+      1. Call Google API
+      2. Parse Results
+    end note
+
+    alt Analysis failed
+        System --> User: display error "Failed to analyze toxicity. API key not set, please try again later."
+    else Analysis completed successfully
+        System --> User: display each toxicity type and confidence
+    end
+end
+deactivate System
+
+@enduml
