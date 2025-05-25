@@ -1,4 +1,4 @@
-@startuml SentenceAnalysis
+@startuml InternalSentenceAnalysis
 hide footbox
 skinparam sequenceMessageAlign center
 title Internal Sequence Diagram: Sentence Analysis
@@ -11,32 +11,39 @@ participant GoogleApi
 participant GraphvizGenerator
 participant GraphvizRenderer
 participant AnalysisResultToken
+User -> NoSenseController: analyzeInputSentence(sentence,sessionId,requestSyntacticTree,model,redirectAttribute)
+activate NoSenseController
 alt User does not provide a sentence
     NoSenseController --> User: Error: Please enter a sentence to analyze
 else User provides a sentence
-    User -> NoSenseController: analyzeInputSentence(sentence,sessionId,requestSyntacticTree,model,redirectAttribute)
-    activate NoSenseController
     NoSenseController -> Sentence: new Sentence(sentence)
     activate Sentence
     Sentence --> NoSenseController
     deactivate Sentence
     NoSenseController -> Analyzer: analyzeSyntax(Sentence)
     activate Analyzer
-    Analyzer -> GoogleApi: analyzeSyntax
-    activate GoogleApi
-    GoogleApi --> Analyzer: analysisResult
-    deactivate GoogleApi
-    Analyzer -> Analyzer: analysisResiltTokens = new ArrayList<AnalysisResultToken>()
-    loop for each token in analysisResult
-        Analyzer -> Analyzer: Extract token attributes from json
-        Analyzer -> AnalysisResultToken: new AnalysisResultToken(index, text, tag, dependencyLabel, headTokenIndex, tense)
-        activate AnalysisResultToken
-        AnalysisResultToken --> Analyzer
-        deactivate AnalysisResultToken
-        Analyzer -> Analyzer: analysisResultTokens.add(token)
+    alt apikey not set
+        Analyzer --> NoSenseController: Error: Google API key is not set
+    else apikey is set
+        Analyzer -> GoogleApi: analyzeSyntax
+        activate GoogleApi
+        GoogleApi --> Analyzer: analysisResult
+        deactivate GoogleApi
+        hnote over Analyzer: analysisResultTokens = new ArrayList<AnalysisResultToken>()
+        loop for each token in analysisResult
+            hnote over Analyzer: Extract token attributes from json
+            Analyzer -> AnalysisResultToken: new AnalysisResultToken(index, text, tag, dependencyLabel, headTokenIndex, tense)
+            activate AnalysisResultToken
+            AnalysisResultToken --> Analyzer
+            deactivate AnalysisResultToken
+            hnote over Analyzer: analysisResultTokens.add(token)
+        end
+        alt error during analysis
+            Analyzer --> NoSenseController: Error: Failed to analyze sentence
+        else analysis successful
+            Analyzer -> NoSenseController: analysisResultTokens
+        end
     end
-
-    Analyzer --> NoSenseController: analysisResultTokens
     deactivate Analyzer
     NoSenseController -> Sentence: setAnalysisResultTokens(analysisResultTokens)
     activate Sentence
@@ -61,17 +68,9 @@ else User provides a sentence
         activate Sentence
         Sentence --> NoSenseController: nouns
         deactivate Sentence
-        NoSenseController -> Sentence: getVerbs("PRESENT")
+        NoSenseController -> Sentence: getVerbs()
         activate Sentence
-        Sentence --> NoSenseController: presentVerbs
-        deactivate Sentence
-        NoSenseController -> Sentence: getVerbs("PAST")
-        activate Sentence
-        Sentence --> NoSenseController: pastVerbs
-        deactivate Sentence
-        NoSenseController -> Sentence: getVerbs("FUTURE")
-        activate Sentence
-        Sentence --> NoSenseController: futureVerbs
+        Sentence --> NoSenseController: verbs
         deactivate Sentence
         NoSenseController -> Sentence: getAdjectives()
         activate Sentence

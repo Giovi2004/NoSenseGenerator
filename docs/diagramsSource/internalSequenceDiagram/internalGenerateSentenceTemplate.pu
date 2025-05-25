@@ -1,0 +1,19 @@
+@startuml InternalSentenceAnalysis
+hide footbox
+skinparam sequenceMessageAlign center
+title Internal Sequence Diagram: Sentence Teplate Generation
+
+actor User
+participant NoSenseController
+participant Generator
+User -> NoSenseController: generateTemplateSentence(modal,redirectAttribute);
+activate NoSenseController
+NoSenseController -> Generator: generateTemplateSentece()
+activate Generator
+Generator --> NoSenseController: templateSentence
+deactivate Generator
+NoSenseController --> User: display templateSentence
+
+
+
+@enduml
