@@ -149,7 +149,7 @@ These instructions will give you a copy of the project up and running on your lo
    mvn site
    ```
 
-This will generate HTML reports in `target/site directory`. Open the `surefire-report.html` file in the browser. You will get an output like below image.
+This will generate HTML reports in `target/site` directory. Open the `surefire-report.html` file in the browser. You will get an output like below image.
 
 ![Test Report HTML][test-screenshot]
 
@@ -234,8 +234,8 @@ This software uses the following packages:
 [Spring-Boot]: https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white
 [Spring-Boot-url]: https://spring.io/
 
-[index-screenshot]: images/index-screenshot.png
-[test-screenshot]: images/test-screenshot.png
+[index-screenshot]: docs/images/index-screenshot.png
+[test-screenshot]: docs/images/test-screenshot.png
 
 [Jekyll]: https://jekyllrb.com
 [Bundler]: https://bundler.io
