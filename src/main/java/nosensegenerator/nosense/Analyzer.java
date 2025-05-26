@@ -13,17 +13,27 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
+/**
+ * This class is responsible for analysing sentences using the Google Cloud Natural language API.
+ */
 @Component
 public class Analyzer {
     private static String apiKey;
     
+    // This method is used to set the API key from the environment variables.
+    // Called automatically by Spring when the class is instantiated.
     @Autowired
     public void setEnvironment(Environment environment) {
         apiKey = environment.getProperty("GOOGLE_API_KEY");
     }
-
+    /**
+     * Analyzes the syntax of a given sentence using the analyzeSyntax Google Cloud API.
+     * 
+     * @param sentence The sentence to analyze.
+     * @return A list of AnalysisResultToken objects containing the analysis results.
+     */
     public static ArrayList<AnalysisResultToken> analyzeSyntax(String sentence) {
+        // Check if the API key is set
         if (apiKey == null || apiKey.isEmpty()) {
             System.err.println("Error: API Key is not set");
             return null;
@@ -65,6 +75,7 @@ public class Analyzer {
             JSONObject jsonResponse = new JSONObject(response.body());
             JSONArray tokens = jsonResponse.getJSONArray("tokens");
             ArrayList<AnalysisResultToken> analysisResultTokens = new ArrayList<>();
+            // For every  token extract the necessary information and save them in an AnalysisResultToken object to be returned
             for (int i = 0; i < tokens.length(); i++) {
                 JSONObject token = tokens.getJSONObject(i);
                 String text = token.getJSONObject("text").getString("content").toLowerCase();
@@ -82,7 +93,13 @@ public class Analyzer {
             return null;
         }
     }
+    /**
+     * Analyzes the toxicity of a given sentence using the modareateText Google Cloud API.
+     * @param sentence The sentence to analyze.
+     * @return A list of ToxicityResultToken objects containing the analysis results.
+     * */
     public static ArrayList<ToxicityResultToken> analyzeToxicity(String sentence) {
+        // Check if the API key is set
         if (apiKey == null || apiKey.isEmpty()) {
             System.err.println("Error: API Key is not set");
             return null;
@@ -123,6 +140,7 @@ public class Analyzer {
             JSONObject jsonResponse = new JSONObject(response.body());
             JSONArray tokens = jsonResponse.getJSONArray("moderationCategories");
             ArrayList<ToxicityResultToken> toxicityResultTokens = new ArrayList<>();
+            // For every token extract the necessary information and save them in a ToxicityResultToken object to be returned
             for (int i = 0; i < tokens.length(); i++) {
                 JSONObject token = tokens.getJSONObject(i);
                 String name = token.getString("name");
