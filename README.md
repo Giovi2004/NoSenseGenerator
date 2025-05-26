@@ -144,7 +144,7 @@ These instructions will give you a copy of the project up and running on your lo
 
 ### Development
 
-For the tests report run in the root folder of the project
+#### For the tests report run in the root folder of the project
    ``` shell
    mvn site
    ```
@@ -152,6 +152,18 @@ For the tests report run in the root folder of the project
 This will generate HTML reports in `target/site directory`. Open the `surefire-report.html` file in the browser. You will get an output like below image.
 
 ![Test Report HTML][test-screenshot]
+
+#### Building and previewing docs site locally
+
+Assuming [Jekyll] and [Bundler] are installed on your computer:
+
+1.  Change your working directory to the `docs/pages` directory of your site.
+
+2.  Run `bundle install`.
+
+3.  Run `bundle exec jekyll serve` to build your site and preview it at `localhost:4000`.
+
+    The built site is stored in the directory `docs/pages/_site`.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -224,3 +236,6 @@ This software uses the following packages:
 
 [index-screenshot]: images/index-screenshot.png
 [test-screenshot]: images/test-screenshot.png
+
+[Jekyll]: https://jekyllrb.com
+[Bundler]: https://bundler.io
