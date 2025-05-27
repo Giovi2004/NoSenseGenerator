@@ -19,7 +19,7 @@ Assuming [Jekyll] and [Bundler] are installed on your computer:
 
     The built site is stored in the directory `docs/pages/_site`.
 
-### Note
+{: .note}
 > Put images in the `docs/pages/images` folder
 
 [Jekyll]: https://jekyllrb.com

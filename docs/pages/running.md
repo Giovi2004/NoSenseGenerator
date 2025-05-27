@@ -15,5 +15,8 @@ To start the application run
 
 If you prefer to run the JAR directly (after building)
 ``` shell
-java -jar target/nosense.jar
+java -jar nosense.jar
 ```
+
+{: .note}
+> The jar file is found in the `target` directory
