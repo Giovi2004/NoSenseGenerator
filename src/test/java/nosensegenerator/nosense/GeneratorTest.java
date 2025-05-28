@@ -54,7 +54,9 @@ public class GeneratorTest {
     }
 
     public void testSentence(String template, String time, Sentence inputSentence, Generator generator) {
-        ArrayList<String> verbs = FileHandler.load("src/main/resources/terms/verbs" + time + ".txt");
+        String timeSuffix = time.toLowerCase();
+        timeSuffix = timeSuffix.substring(0, 1).toUpperCase() + timeSuffix.substring(1);
+        ArrayList<String> verbs = FileHandler.load("src/main/resources/terms/verbs" + timeSuffix + ".txt");
         ArrayList<String> nouns = FileHandler.load("src/main/resources/terms/nouns.txt");
         ArrayList<String> adjectives = FileHandler.load("src/main/resources/terms/adjectives.txt");
 
@@ -86,7 +88,7 @@ public class GeneratorTest {
             allowedWords.add(noun);
         for (String adj : adjectives)
             allowedWords.add(adj);
-
+        System.out.println("Filled words: " + filledWords);
         for (String word : filledWords) {
             if (!word.isEmpty()) {
                 assertTrue(allowedWords.contains(word));
