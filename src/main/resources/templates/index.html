@@ -215,7 +215,7 @@
                   <h5 class="card-title">Sentence Analysis</h5>
                   <p
                     class="card-text text-start"
-                    th:if="${graphImageName == null and nouns == null and adjectives == null and verbsPresent == null and verbsPast == null and verbsFuture == null}"
+                    th:if="${graphImageName} == graph and ${nouns} == null and ${verbs} == null and ${adjectives} == null"
                   >
                     Your sentence analysis will appear here
                   </p>
@@ -287,7 +287,7 @@
                   >
                     <p
                       class="card-text"
-                      th:if="${toxicityResultTokens == null}"
+                      th:if="${!hasTokens}"
                     >
                       The toxicity analysis of the generated sentence will
                       appear here
