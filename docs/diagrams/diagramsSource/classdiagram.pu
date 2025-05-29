@@ -26,7 +26,7 @@ class NoSenseController {
     +ResponseEntity<Resource> serveDependencyGraphImage(String fileName)
 }
 note left of NoSenseController
-    Some of this attributes are used to store the state of the session.
+    Some of this attributes are only used to store the state of the session so that the frontend can dysplay them correctly.
 end note
 
 
