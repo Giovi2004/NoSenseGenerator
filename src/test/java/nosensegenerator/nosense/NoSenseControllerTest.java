@@ -111,11 +111,16 @@ public class NoSenseControllerTest {
 
         // Attributes expected to be null
         for (String attr : List.of(
-                "toxicityResultTokens", "graphImageName", "nouns",
-                "verbs", "adjectives")) {
+                "nouns", "verbs", "adjectives")) {
             assertTrue(model.containsAttribute(attr));
             assertNull(model.getAttribute(attr));
         }
+
+        assertTrue(model.containsAttribute("graphImageName"));
+        assertEquals("graph", model.getAttribute("graphImageName"));
+
+        assertTrue(model.containsAttribute("toxicityResultTokens"));
+        assertEquals(new ArrayList<ToxicityResultToken>(), model.getAttribute("toxicityResultTokens"));
     }
 
     // Test for analyzeInputSentence
