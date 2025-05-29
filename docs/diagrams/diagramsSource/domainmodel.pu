@@ -1,5 +1,5 @@
 @startuml
-
+title Domain Model
 object Analyzer
 object Generator
 object Noun
@@ -8,6 +8,8 @@ object Adjective
 object Template
 object Sentence
 object Program
+object SyntaxAnalisis
+object ToxicityAnalisis
 
 
 Noun "n" --* "1" Generator : contains
@@ -18,6 +20,8 @@ Program --> Analyzer : uses
 Program --> Generator : uses
 Analyzer --> Sentence : analyzes
 Generator --> Sentence : generates
-Sentence *-- Program : contains
+Program *-- Sentence : contains
+Analyzer --> SyntaxAnalisis : generates
+Analyzer --> ToxicityAnalisis : generates
 
 @enduml

@@ -77,7 +77,7 @@ deactivate System
 @startuml SentenceTemplateGeneration
 hide footbox
 skinparam sequenceMessageAlign center
-title System Sequence Diagram: Sentence Generation
+title System Sequence Diagram: Template Sentence Generation
 
 actor User
 participant "NoSense\nSystem" as System
@@ -137,7 +137,7 @@ participant "NoSense\nSystem" as System
 User -> System: request toxicity analysis
 activate System
 
-alt No Generated Sentence Analyzed
+alt No Generated Sentence To Analyze
     System --> User: display error "No sentence has been generated yet to analyze"
 else Valid Input
     note right of System

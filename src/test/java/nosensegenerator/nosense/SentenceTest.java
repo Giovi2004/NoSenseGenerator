@@ -3,6 +3,8 @@ package nosensegenerator.nosense;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
@@ -105,6 +107,13 @@ public class SentenceTest {
         tokens.add(token1);
         sentence.setToxicityResultTokens(tokens);
         assertEquals(tokens, sentence.getToxicityResultTokens());
+    }
+    @Test
+    public void testIsTextBlank() {
+        Sentence emptySentence = new Sentence("");
+        assertTrue(emptySentence.isTextBlank());
+        Sentence sentenceWithText = new Sentence("This is a test sentence.");
+        assertFalse(sentenceWithText.isTextBlank());
     }
 
 }

@@ -2,51 +2,65 @@
 
 
 class NoSenseController {
-    -Generator generator
+    -String sessionId
     -Sentence inputSentence
-    -Sentence templateSentence
+    -String templateSentence
     -Sentence generatedSentence
-    -ArrayList<ToxicityResultToken> toxicityResult
+    -ArrayList<ToxicityResultToken> toxicityResultTokens
+    -String graphImageName
+    -ArrayList<String> nouns
+    -ArrayList<String> verbs
+    -ArrayList<String> adjectives
+    -boolean requestSyntacticTree
+    -String selectedTime
+    -Generator generator
     +NoSenseController()
-    +void initializeSession(Model model)
-    +String index()
-    +String analyzeInputSentence(String sentence, boolean requestSyntacticTree, Model model)
-    +String generateSentence(String time, Sentence inputSentence, Model model)
-    +String saveTerms(Sentence inputSentence, Model model)
-    +String analyzeToxicity(Sentence generatedSentence, Model model)
+    +void initializeSession(HttpSession session, Model model)
+    +String index(Model model)
+    +String analyzeInputSentence(String sessionId, String sentence, boolean requestSyntacticTree, Model model, RedirectAttributes redirectAttributes)
+    +String generateTemplateSentence(Model model, RedirectAttributes redirectAttributes)
+    +String generateSentence(String tense, String templateSentence, Sentence inputSentence, Model model, RedirectAttributes redirectAttributes)
+    +String saveTerms(Sentence inputSentence, Model model, RedirectAttributes redirectAttributes)
+    +String clearSession(SessionStatus sessionStatus)
+    +String analyzeToxicity(Sentence generatedSentence, Model model, RedirectAttributes redirectAttributes)
+    +ResponseEntity<Resource> serveDependencyGraphImage(String fileName)
 }
+note left of NoSenseController
+    Some of this attributes are used to store the state of the session.
+end note
 
 
 class Nouns {
     -ArrayList<String> nouns
-    -generatedNumber
+    -int generatedNumber
     -String filePath
-    +Noun()
+    +Nouns()
     +String getNoun()
-    +void save(ArrayList<String> nounsForFile)
+    +int save(ArrayList<String> nounsForFile)
 }
+
 class Verbs {
-    -ArrayList<String> verbs
     -ArrayList<String> verbsPresent
     -ArrayList<String> verbsPast
     -ArrayList<String> verbsFuture
-    -generatedNumber
-    -String filePath
+    -int generatedNumber
     -String filePathPresent
     -String filePathPast
     -String filePathFuture
-    +Verb()
+    +Verbs()
     +String getVerb(String time)
-    +void save(String time, ArrayList<String> verbs)
+    +int save(String time, ArrayList<String> verbsForFile)
 }
+
 class Adjectives {
     -ArrayList<String> adjectives
-    -generatedNumber
+    -int generatedNumber
     -String filePath
-    +Adjective()
+    +Adjectives()
     +String getAdjective()
-    +void save(ArrayList<String> adjectivesForFile)
+    +int save(ArrayList<String> adjectivesForFile)
 }
+
 class Sentence {
     -String text
     -ArrayList<AnalysisResultToken> analysisResultTokens
@@ -61,26 +75,29 @@ class Sentence {
     +void setAnalysisResultTokens(ArrayList<AnalysisResultToken> analysisResultTokens)
     +ArrayList<ToxicityResultToken> getToxicityResultTokens()
     +void setToxicityResultTokens(ArrayList<ToxicityResultToken> toxicityResultTokens)
+    +boolean isTextBlank()
 }
+
 
 class Generator {
     -ArrayList<String> templates
     -Nouns nouns
     -Verbs verbs
     -Adjectives adjectives
-    -String filePath = "src/main/resources/terms/sentences.txt"
+    -String filePath
     +Generator()
     +String generateTemplateSentence()
     +Sentence fillTemplateSentence(String template, Sentence inputSentence, String time)
-    +void saveFromSentence(Sentence input)
+    +int saveFromSentence(Sentence input)
 }
 
 class Analyzer {
-    -String text
-    -static String apiKey;
-    +static ArrayList<ToxicityResultToken> analyzeToxicity(String sentence)
+    -static String apiKey
+    +void setEnvironment(Environment environment)
     +static ArrayList<AnalysisResultToken> analyzeSyntax(String sentence)
+    +static ArrayList<ToxicityResultToken> analyzeToxicity(String sentence)
 }
+
 class AnalysisResultToken {
     -int index
     -String text
@@ -97,18 +114,20 @@ class AnalysisResultToken {
     +int getDependencyToken()
 }
 
+
 class FileHandler {
-    +static void save(ArrayList<String> terms, ArrayList<String> termsForFile, String filePath)
+    +static int save(ArrayList<String> terms, ArrayList<String> termsForFile, String filePath)
     +static ArrayList<String> load(String filePath)
 }
+
 class ToxicityResultToken {
     -String name
     -Double confidence
     +ToxicityResultToken(String name, Double confidence)
     +String getName()
     +Double getConfidence()
+    +int getConfidencePercentage()
 }
-
 
 package "Graphviz" {
     class GraphvizRenderer {
@@ -119,6 +138,7 @@ package "Graphviz" {
     }
 
     class GraphvizGenerator {
+        +static void GenerateDependencyGraph(ArrayList<AnalysisResultToken> tokens, String fileName)
         -static final String TAB
         -static final String FILE_PATH
         -static final String NODE_TEMPLATE
@@ -127,7 +147,6 @@ package "Graphviz" {
         -static final String CONTROL_NODE
         -static final String GRAPH_TEMPLATE
         -static final List<String> colors
-        +static void GenerateDependencyGraph(ArrayList<AnalysisResultToken> tokens, String fileName)
         -static String FillNodeTemplate(AnalysisResultToken token)
         -static String FillLabelTemplate(AnalysisResultToken token)
         -static String FillEdgeTemplate(String tail, String head, String tailPort, String headPort, String options)
@@ -136,6 +155,7 @@ package "Graphviz" {
         -static String FillGraphTemplate(String _nodes, String _dependencies, String _subgraph, String _controlNodes)
         -static int getNextColor(int _color_index)
     }
+
 }
 
 

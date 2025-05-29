@@ -1,7 +1,7 @@
-@startuml InternalSentenceAnalysis
+@startuml InternalGenerateSentenceTemplate
 hide footbox
 skinparam sequenceMessageAlign center
-title Internal Sequence Diagram: Sentence Teplate Generation
+title Internal Sequence Diagram: Template Sentence Generation
 
 actor User
 participant NoSenseController

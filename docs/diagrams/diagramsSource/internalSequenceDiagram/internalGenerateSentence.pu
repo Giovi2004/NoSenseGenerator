@@ -1,7 +1,7 @@
 @startuml InternalGenerateSentence
 hide footbox
 skinparam sequenceMessageAlign center
-title Internal Sequence Diagram: Generate Sentence
+title Internal Sequence Diagram: Sentence Generation
 
 actor User
 participant NoSenseController

@@ -1,7 +1,7 @@
 @startuml InternalSave
 hide footbox
 skinparam sequenceMessageAlign center
-title Internal Sequence Diagram: Save Terms
+title Internal Sequence Diagram: Terms Storage
 
 actor User
 participant NoSenseController
