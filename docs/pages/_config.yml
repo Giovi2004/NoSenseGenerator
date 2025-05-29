@@ -9,15 +9,3 @@ url: https://just-the-docs.github.io
 
 aux_links:
   Template Repository: https://github.com/Giovi2004/NoSenseGenerator
-
-
-callouts:
-  warning:
-    title: Warning
-    color: red
-  success:
-    title: Success
-    color: green
-  note:
-    title: Note
-    color: purple

@@ -1,11 +1,9 @@
-<!--
 ---
 title: Manual
 layout: home
 nav_order: 1
 permalink: /
 ---
--->
 
 # No Sense Generator Documentation
 
