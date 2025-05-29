@@ -6,6 +6,11 @@ on:
 
   workflow_dispatch:  # Allows manual triggering of the workflow
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   jekyll-build:
     runs-on: ubuntu-latest
