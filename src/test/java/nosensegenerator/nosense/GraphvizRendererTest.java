@@ -1,6 +1,7 @@
 package nosensegenerator.nosense;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -45,6 +46,7 @@ public class GraphvizRendererTest {
             System.out.println("Rendered graph to: " + result);
         } catch (Exception e) {
             e.printStackTrace();
+                fail("Test failed due to exception: " + e.getMessage());
         }
     }
 }
