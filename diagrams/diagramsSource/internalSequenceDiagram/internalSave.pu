@@ -1,0 +1,100 @@
+@startuml InternalSave
+hide footbox
+skinparam sequenceMessageAlign center
+title Internal Sequence Diagram: Terms Storage
+
+actor User
+participant NoSenseController
+participant Generator
+participant Sentence
+participant AnalysisResultToken
+participant Nouns
+participant Verbs
+participant Adjectives
+participant FileHandler
+
+User -> NoSenseController: saveTerms(inputSentence, model, redirectAttribute)
+activate NoSenseController
+alt user has not analysed a sentence yet
+    NoSenseController --> User: Error: No sentence has been analyzed yet
+else
+    NoSenseController -> Generator: saveFromSentence(inputSentence)
+    activate Generator
+    Generator -> Sentence: getNouns()
+    activate Sentence
+    loop for each token in analysisResultTokens
+        opt token is a noun
+            Sentence -> AnalysisResultToken: getText()
+            activate AnalysisResultToken
+            AnalysisResultToken --> Sentence: text
+            deactivate AnalysisResultToken
+            hnote over Sentence: add noun to result list
+        end
+    end
+    Sentence --> Generator: inputNouns
+    Generator ->Nouns: save(inputNouns)
+    activate Nouns
+    Nouns ->FileHandler: save(terms,termsForFile,filePath)
+    activate FileHandler
+    FileHandler --> Nouns: savedCount
+    deactivate FileHandler
+    Nouns --> Generator: savedCount
+    deactivate Nouns
+    Generator -> Sentence: getAdjectives()
+    activate Sentence
+    loop for each token in analysisResultTokens
+        opt token is an adjective
+            Sentence -> AnalysisResultToken: getText()
+            activate AnalysisResultToken
+            AnalysisResultToken --> Sentence: text
+            deactivate AnalysisResultToken
+            hnote over Sentence: add adjective to result list
+        end
+    end
+    Sentence --> Generator: inputAdjectives
+    Generator -> Adjectives: save(inputAdjectives)
+    activate Adjectives
+    Adjectives -> FileHandler: save(terms,termsForFile,filePath)
+    activate FileHandler
+    FileHandler --> Adjectives: savedCount
+    deactivate FileHandler
+    Adjectives --> Generator: savedCount
+    deactivate Adjectives
+    loop for each tense in ["PRESENT", "PAST", "FUTURE"]
+        Generator -> Sentence:getVerbs(tense)
+        activate Sentence
+        loop for each token in analysisResultTokens
+            opt token is a verb and token tense matches tense
+                Sentence -> AnalysisResultToken: getText()
+                activate AnalysisResultToken
+                AnalysisResultToken --> Sentence: text
+                deactivate AnalysisResultToken
+                hnote over Sentence: add verb to result list
+            end
+        end
+        Sentence --> Generator: inputVerbs
+        Generator -> Verbs: save(inputVerbs)
+        activate Verbs
+        Verbs -> FileHandler: save(terms,termsForFile,filePath)
+        activate FileHandler
+        FileHandler --> Verbs: savedCount
+        deactivate FileHandler
+        Verbs --> Generator: savedCount
+        deactivate Verbs
+    end
+    Generator --> NoSenseController: savedCount
+    deactivate Generator
+    opt savedCount > 0
+        NoSenseController --> User: display: Terms saved successfully
+    else savedCount == 0
+        NoSenseController --> User: Error: No terms were saved
+    else savedCount < 0
+        NoSenseController --> User: Error: Error saving terms
+    end
+
+end
+deactivate NoSenseController
+
+
+
+@enduml

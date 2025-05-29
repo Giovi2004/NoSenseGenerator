@@ -1,0 +1,125 @@
+@startuml InternalGenerateSentence
+hide footbox
+skinparam sequenceMessageAlign center
+title Internal Sequence Diagram: Sentence Generation
+
+actor User
+participant NoSenseController
+participant Generator
+participant Sentence
+participant AnalysisResultToken
+participant Nouns
+participant Verbs
+participant Adjectives
+User -> NoSenseController: generateSentence(tense,templateSentence,inputSentence,model,redirectAttribute)
+activate NoSenseController
+alt User has not analysed a sentence
+    NoSenseController --> User: Error: No sentence has been analyzed yet
+else Template sentence has not been generated
+    NoSenseController--> User: Error: No template sentence has been generated yet
+else selected tense is not state
+    NoSenseController --> User: Error: Invalid tense value
+else
+    NoSenseController -> Generator: fillTemplateSentence(templateSentence, inputSentence, tense)
+    activate Generator
+    loop while template contains "[sentence]"
+        Generator -> Generator: generateTemplateSentence()
+    end
+    Generator -> Sentence: getVerbs(tense)
+    activate Sentence
+    alt tense is not "PRESENT", "PAST", "FUTURE"
+        loop for each token in analisisResultTokens
+            opt token is a verb
+                Sentence -> AnalysisResultToken: getText()
+                activate AnalysisResultToken
+                AnalysisResultToken --> Sentence: text
+                deactivate AnalysisResultToken
+                hnote over Sentence: add verb to result list
+            end
+        end
+    else
+        loop for each token in analisisResultTokens
+            opt token is a verb and token tense matches tense
+                Sentence -> AnalysisResultToken: getText()
+                activate AnalysisResultToken
+                AnalysisResultToken --> Sentence: text
+                deactivate AnalysisResultToken
+                hnote over Sentence: add verb to result list
+            end
+        end
+    end
+    Sentence --> Generator: inputVerbs
+    deactivate Sentence
+    Generator -> Sentence: getNouns()
+    activate Sentence
+    loop for each token in analisisResultTokens
+        opt token is a noun
+            Sentence -> AnalysisResultToken: getText()
+            activate AnalysisResultToken
+            AnalysisResultToken --> Sentence: text
+            deactivate AnalysisResultToken
+            hnote over Sentence: add noun to result list
+        end
+    end
+    Sentence --> Generator: inputNouns
+    deactivate Sentence
+    Generator -> Sentence: getAdjectives()
+    activate Sentence
+    loop for each token in analisisResultTokens
+        opt token is an adjective
+            Sentence -> AnalysisResultToken: getText()
+            activate AnalysisResultToken
+            AnalysisResultToken --> Sentence: text
+            deactivate AnalysisResultToken
+            hnote over Sentence: add adjective to result list
+        end
+    end
+    Sentence --> Generator: unpitAdjectives
+    deactivate Sentence
+    loop while template contains "[noun]"
+        opt inputNouns is not empty and random number < "0.5"
+            hnote over Generator: replace first [noun] in template with random noun form inputNouns
+        else 
+            Generator -> Nouns: getNoun()
+            activate Nouns
+            Nouns --> Generator: noun
+            deactivate Nouns
+            hnote over Generator: replace first [noun] in template with noun
+        end
+    end
+    loop while template contains "[verb]"
+        opt inputVerbs is not empty and random number < "0.5"
+            hnote over Generator: replace first [verb] in template with random verb form inputVerbs
+        else 
+            Generator -> Verbs: getVerb()
+            activate Verbs
+            Verbs --> Generator: verb
+            deactivate Verbs
+            hnote over Generator: replace first [verb] in template with verb
+        end
+    end
+
+    loop while template contains "[adjective]"
+        opt inputAdjectives is not empty and random number < "0.5"
+            hnote over Generator: replace first [adjective] in template with random adjective form inputAdjectives
+        else 
+            Generator -> Adjectives: getAdjective()
+            activate Adjectives
+            Adjectives --> Generator: adjective
+            deactivate Adjectives
+            hnote over Generator: replace first [adjective] in template with adjective
+        end
+    end
+    Generator -> Sentence: new Sentence(filledTemplateSentence)
+    activate Sentence
+    Sentence --> Generator
+    deactivate Sentence
+    Generator --> NoSenseController: generatedSentence
+    deactivate Generator
+    NoSenseController --> User: display generatedSentence
+
+end
+
+
+
+@enduml

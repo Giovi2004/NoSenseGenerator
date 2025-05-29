@@ -1,0 +1,56 @@
+@startuml InternalToxicityAnalysis
+hide footbox
+skinparam sequenceMessageAlign center
+title Internal Sequence Diagram: Toxicity Analysis
+
+actor User
+participant NoSenseController
+participant Sentence
+participant Analyzer
+participant GoogleApi
+User -> NoSenseController: analyzeToxicity(generatedSentence,model,redirectAttribute)
+activate NoSenseController
+alt User has not generated a sentence
+    NoSenseController --> User: Error: No sentence has been generated yet
+else
+    NoSenseController -> Sentence: getText()
+    activate Sentence
+    Sentence --> NoSenseController: text
+    deactivate Sentence
+    NoSenseController -> Analyzer: analyzeToxicity(text)
+    activate Analyzer
+    alt apikey not set
+        Analyzer --> NoSenseController: Error: Google API key is not set
+    else apikey is set
+        Analyzer -> GoogleApi: moderateText
+        activate GoogleApi
+        GoogleApi --> Analyzer: toxicityResult
+        deactivate GoogleApi
+        hnote over Analyzer: toxicityResultTokens = new ArrayList<toxicityResultToken>()
+        loop for each token in toxicityResult
+            hnote over Analyzer: Extract token attributes from json
+            Analyzer -> toxicityResultToken: new toxicityResultToken(name, confidence)
+            activate toxicityResultToken
+            toxicityResultToken --> Analyzer
+            deactivate toxicityResultToken
+            hnote over Analyzer: toxicityResultTokens.add(token)
+        end
+        alt error during analysis
+            Analyzer --> NoSenseController: Error: Failed to analyze sentence
+        else analysis successful
+            Analyzer -> NoSenseController: toxicityResultTokens
+        end
+        Analyzer --> NoSenseController: toxicityResultToken
+    end
+    alt Error in analysis
+        NoSenseController --> User: Error: Failed to analyze toxicity
+    else
+        NoSenseController --> User: display toxicity result
+    end
+
+    deactivate NoSenseController
+end
+
+
+
+@enduml

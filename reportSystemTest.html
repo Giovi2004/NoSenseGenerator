@@ -1,0 +1,111 @@
+<h1 id="system-test-report">System Test Report</h1>
+
+<h2 id="st1-sentence-analysis">ST1: Sentence Analysis</h2>
+<h3 id="acceptance-criteria">Acceptance Criteria:</h3>
+<ul>
+  <li><strong>Given</strong> I have not selected the request syntactic tree option
+<strong>When</strong> I input a sentence and click the Analyze Sentence button
+<strong>Then</strong> the system processes the sentence and displays the Nouns, Verbs and Adjectives from the sentence
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+  <li><strong>Given</strong> I have selected the request syntactic tree option
+<strong>When</strong> I input a sentence and click the Analyze Sentence button
+<strong>Then</strong> the system processes the sentence, displays the Nouns, Verbs and Adjectives from the sentence and shows the syntactic tree visualization of the input sentence
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+  <li><strong>Given</strong> I have not inputed any sentence
+<strong>When</strong> I click the Analyze Sentence button
+<strong>Then</strong> the system displays a message requiring to input a sentence
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="st2-template-generation">ST2: Template Generation</h2>
+<h3 id="acceptance-criteria-1">Acceptance Criteria:</h3>
+<ul>
+  <li><strong>Given</strong> I have already analyzed a sentence
+<strong>When</strong> I click the Generate Template button
+<strong>Then</strong> the system generates and displays a random sentence template with placeholders for nouns, verbs, adjectives and ohter sentences
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+  <li><strong>Given</strong> I have not analyzed a sentence
+<strong>Then</strong> the Generate Template button is disabled
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="st3-template-completion">ST3: Template Completion</h2>
+<h3 id="acceptance-criteria-2">Acceptance Criteria:</h3>
+<ul>
+  <li><strong>Given</strong> I have already generated a sentence template
+<strong>When</strong> I click the Generate Sentence button
+<strong>Then</strong> the system fills the template with terms from its built-in dictionary and the input sentence and displays the completed sentence
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+  <li><strong>Given</strong> I have not generated a sentence template
+<strong>Then</strong> the Generate Sentence button is disabled
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="st4-toxicity-validation">ST4: Toxicity Validation</h2>
+<h3 id="acceptance-criteria-3">Acceptance Criteria:</h3>
+<ul>
+  <li><strong>Given</strong> I have already generated a sentence
+<strong>When</strong> I click the Validate Toxicity button
+<strong>Then</strong> the system analyzes the sentence for toxicity and displays the results
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+  <li><strong>Given</strong> I have not generated a sentence
+<strong>Then</strong> the Validate Toxicity button is disabled
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="st5-term-storage">ST5: Term Storage</h2>
+<h3 id="acceptance-criteria-4">Acceptance Criteria:</h3>
+<ul>
+  <li><strong>Given</strong> I have analyzed a sentence
+<strong>When</strong> I click the Save Terms button
+<strong>Then</strong> the system extracts terms (nouns, verbs, adjectives) from the input sentence and saves them on the server for future use
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+  <li><strong>Given</strong> I have not analyzed a sentence
+<strong>Then</strong> the Save Terms button is disabled
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="st6-time-based-generation">ST6: Time-Based Generation</h2>
+<h3 id="acceptance-criteria-5">Acceptance Criteria:</h3>
+<ul>
+  <li><strong>Given</strong> I have already analyzed a sentence
+<strong>When</strong> I select a time tense (present, past, future) and click the Generate Sentence button
+<strong>Then</strong> the system generates a sentence in the selected time tense and displaysis it
+    <ul>
+      <li><strong>PASSED</strong></li>
+    </ul>
+  </li>
+</ul>

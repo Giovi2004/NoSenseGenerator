@@ -1,0 +1,349 @@
+<h1 id="no-sense-generator-documentation">No Sense Generator Documentation</h1>
+
+<ul>
+  <li><a href="#no-sense-generator-documentation">No Sense Generator Documentation</a>
+    <ul>
+      <li><a href="#about-the-project">About The Project</a></li>
+      <li><a href="#used-libraries">Used Libraries</a></li>
+      <li><a href="#used-apis">Used APIs</a></li>
+      <li><a href="#getting-started">Getting Started</a>
+        <ul>
+          <li><a href="#prerequisites">Prerequisites</a>
+            <ul>
+              <li><a href="#install-java">Install Java</a></li>
+              <li><a href="#install-maven">Install Maven</a></li>
+              <li><a href="#install-graphviz">Install Graphviz</a></li>
+              <li><a href="#get-api-key">Get API Key</a></li>
+            </ul>
+          </li>
+          <li><a href="#configuration">Configuration</a></li>
+          <li><a href="#building">Building</a></li>
+          <li><a href="#running">Running</a></li>
+        </ul>
+      </li>
+      <li><a href="#development">Development</a>
+        <ul>
+          <li><a href="#testing">Testing</a></li>
+          <li><a href="#documentation">Documentation</a></li>
+          <li><a href="#deployment">Deployment</a></li>
+          <li><a href="#security-considerations">Security Considerations</a></li>
+        </ul>
+      </li>
+      <li><a href="#usage">Usage</a>
+        <ul>
+          <li><a href="#basic-usage">Basic Usage</a>
+            <ul>
+              <li><a href="#basic-operations">Basic Operations</a></li>
+            </ul>
+          </li>
+          <li><a href="#understanding-the-results">Understanding the Results</a>
+            <ul>
+              <li><a href="#dependency-graph">Dependency Graph</a></li>
+              <li><a href="#toxicity-analysis">Toxicity Analysis</a></li>
+              <li><a href="#tips">Tips</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="about-the-project">About The Project</h2>
+
+<p>Random Nonsense Sentence Generator is a project developed, by <a href="https://github.com/Leo-04-e">Leonardo Erta</a>, <a href="https://github.com/Giovi2004">Giovanni Panziera</a> and <a href="https://github.com/itsIaky">Iacopo Carretta</a>  to explore natural language processing and web application development. The application allows users to generate sentences and analyze them using the Google Cloud Natural Language API. It provides features such as sentence structure analysis, nonsense sentence generation, and toxicity detection, all accessible through a simple web interface. The project demonstrates integration of cloud-based NLP services, Java backend development with Spring Boot, and a modern frontend using Bootstrap.</p>
+
+<h2 id="used-libraries">Used Libraries</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Library</th>
+      <th>Version</th>
+      <th>Used Features</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Spring Boot</td>
+      <td>3.4.5</td>
+      <td>- Web application framework<br />- RESTful endpoints<br />- Template engine integration</td>
+    </tr>
+    <tr>
+      <td>Bootstrap</td>
+      <td>5.3.6</td>
+      <td>- Responsive layout<br />- UI components</td>
+    </tr>
+    <tr>
+      <td>Graphviz Java</td>
+      <td>0.18.1</td>
+      <td>- .dot file parsing<br />- Rendering graph to image</td>
+    </tr>
+    <tr>
+      <td>Maven</td>
+      <td>Latest</td>
+      <td>- Project build automation<br />- Dependency management<br />- Test reporting</td>
+    </tr>
+    <tr>
+      <td>Maven Surefire Report Plugin</td>
+      <td>3.5.3</td>
+      <td>- Generates HTML reports of unit tests</td>
+    </tr>
+    <tr>
+      <td>Thymeleaf</td>
+      <td>Latest</td>
+      <td>- Server-side templating<br />- Dynamic HTML rendering</td>
+    </tr>
+    <tr>
+      <td>JUnit</td>
+      <td>Latest</td>
+      <td>- Unit testing framework<br />- Test reporting</td>
+    </tr>
+    <tr>
+      <td>Mockito</td>
+      <td>5.2.0</td>
+      <td>- Mocking framework for unit tests</td>
+    </tr>
+    <tr>
+      <td>JSON Library</td>
+      <td>20230618</td>
+      <td>- JSON data processing<br />- API response handling</td>
+    </tr>
+    <tr>
+      <td>Jekyll</td>
+      <td>Latest</td>
+      <td>- Documentation site generation<br />- Markdown processing<br />- Documentation templating</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="used-apis">Used APIs</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>API</th>
+      <th>Purpose</th>
+      <th>Features Used</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Google Cloud Natural Language</td>
+      <td>- Text Analysis<br />- Content Moderation</td>
+      <td>- Syntactic analysis<br />- Entity extraction<br />- Part-of-speech tagging<br />- Toxicity detection</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p>Follow these instructions to get a copy of this project up and running on your local machine for development and testing purposes. See <a href="#deployment">deployment</a> for notes on deploying the project on a live system.</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<h4 id="install-java">Install Java</h4>
+<ul>
+  <li>Install Java (version 21), you can get it <a href="https://www.oracle.com/java/technologies/downloads/#java21">here</a></li>
+  <li>Or install via package manager:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># macOS (Homebrew)</span>
+brew <span class="nb">install </span>openjdk@21
+
+<span class="c"># Ubuntu/Debian</span>
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>openjdk-21-jdk
+
+<span class="c"># Fedora</span>
+<span class="nb">sudo </span>dnf <span class="nb">install </span>java-21-openjdk
+
+<span class="c"># Arch Linux</span>
+<span class="nb">sudo </span>pacman <span class="nt">-S</span> jdk-openjdk
+</code></pre></div></div>
+
+<h4 id="install-maven">Install Maven</h4>
+<p>Install Maven, installation instructions <a href="https://maven.apache.org/install.html">here</a></p>
+
+<h4 id="install-graphviz">Install Graphviz</h4>
+<p>Install Graphviz (version 12.2.1), installation instructions <a href="https://graphviz.org/download/">here</a></p>
+
+<h4 id="get-api-key">Get API Key</h4>
+<p>This project uses Google Cloud Natural Language AI for text analysis. Get an API key <a href="https://cloud.google.com/natural-language?hl=en">here</a></p>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>After cloning the repository, enter your API key in <code class="language-plaintext highlighter-rouge">application.properties</code> found in the resources directory:</p>
+
+<div class="language-properties highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">GOOGLE_API_KEY</span><span class="p">=</span><span class="s">ENTER YOUR API KEY</span>
+</code></pre></div></div>
+
+<h3 id="building">Building</h3>
+
+<p>To build the project, run in the root folder:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./mvnw clean package
+</code></pre></div></div>
+
+<p>Skip tests during build:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./mvnw clean package <span class="nt">-DskipTests</span>
+</code></pre></div></div>
+
+<p>Skip test compilation and execution:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./mvnw clean package <span class="nt">-Dmaven</span>.test.skip<span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="running">Running</h3>
+
+<p>Start the application:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./mvnw spring-boot:run
+</code></pre></div></div>
+
+<p>Or run the JAR directly (after building):</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java <span class="nt">-jar</span> nosense.jar
+</code></pre></div></div>
+
+<p>The jar file is found in the <code class="language-plaintext highlighter-rouge">target</code> directory.</p>
+
+<h2 id="development">Development</h2>
+
+<h3 id="testing">Testing</h3>
+<p>To generate test reports, run:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn site
+</code></pre></div></div>
+<p>This generates HTML reports in <code class="language-plaintext highlighter-rouge">target/site</code> directory. Open <code class="language-plaintext highlighter-rouge">surefire.html</code> in browser.</p>
+
+<p>View the test report <a href="test-report/surefire.html">here</a></p>
+
+<h3 id="documentation">Documentation</h3>
+<p>Assuming <a href="https://jekyllrb.com">Jekyll</a> and <a href="https://bundler.io">Bundler</a> are installed on your computer, you can build and preview documentation locally</p>
+
+<ol>
+  <li>Change directory to pages</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">bundle install</code></li>
+  <li>Run <code class="language-plaintext highlighter-rouge">bundle exec jekyll serve</code></li>
+  <li>
+    <p>Preview at <code class="language-plaintext highlighter-rouge">localhost:4000</code></p>
+
+    <p>The built site is stored in the directory <code class="language-plaintext highlighter-rouge">docs/pages/_site</code>.</p>
+  </li>
+</ol>
+
+<p>Note: Put images in images folder</p>
+
+<h3 id="deployment">Deployment</h3>
+
+<h3 id="security-considerations">Security Considerations</h3>
+<p>Before deploying to production, be aware of these security risks and limitations:</p>
+
+<p><strong>Storage</strong></p>
+<ul>
+  <li>Files saved in system temp directory</li>
+  <li>No automatic cleanup mechanism</li>
+  <li>No file size limitations</li>
+  <li>No storage quota management</li>
+</ul>
+
+<p><strong>Input/Output Security</strong></p>
+<ul>
+  <li>User input not sanitized</li>
+</ul>
+
+<p><strong>Authentication &amp; Authorization</strong></p>
+<ul>
+  <li>No user authentication system</li>
+  <li>No role-based access control</li>
+  <li>No request limitations</li>
+</ul>
+
+<p><strong>Cloud Resources</strong></p>
+<ul>
+  <li>No usage quotas configured</li>
+  <li>Watch Google Cloud billing costs</li>
+  <li>No monitoring/logging/alerting system</li>
+</ul>
+
+<p><strong>Recommended Actions</strong></p>
+<ol>
+  <li>Implement proper file storage with cleanup</li>
+  <li>Add input sanitization and validation</li>
+  <li>Set up user authentication/authorization</li>
+  <li>Configure rate limiting and quotas</li>
+  <li>Implement monitoring/logging/alerting</li>
+</ol>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="basic-usage">Basic Usage</h3>
+<p>The Random Nonsense Sentence Generator provides a web interface with the following features:</p>
+
+<p><img src="images/index-screenshot.png" alt="Home Page" /></p>
+
+<h4 id="basic-operations">Basic Operations</h4>
+<ol>
+  <li><strong>Input Sentence Analysis</strong>
+    <ul>
+      <li>Enter your sentence in the “Your Sentence” text area</li>
+      <li>Optionally check “Request syntactic tree” to visualize the sentence structure</li>
+      <li>Click “Analyze sentence” to process your input</li>
+      <li>The analysis will show:
+        <ul>
+          <li>Extracted nouns</li>
+          <li>Extracted verbs</li>
+          <li>Extracted adjectives</li>
+          <li>Dependency graph (if requested)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Sentence Generation</strong>
+    <ul>
+      <li>After analyzing a sentence, click “Generate template” to create a template</li>
+      <li>Choose the tense (Present, Past or Future) from the dropdown</li>
+      <li>Click “Generate sentence” to create a new nonsense sentence based on your input</li>
+    </ul>
+  </li>
+  <li><strong>Additional Features</strong>
+    <ul>
+      <li>Click “Save Terms” to store the analyzed words for future use</li>
+      <li>Use “Analyze Toxicity” to check the generated sentence for potentially harmful content</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="understanding-the-results">Understanding the Results</h3>
+
+<h4 id="dependency-graph">Dependency Graph</h4>
+
+<p><img src="images/dependency-graph.png" alt="Dependency Graph" /></p>
+
+<p>The dependency graph provides a visual representation of the sentence structure:</p>
+
+<ul>
+  <li><strong>Node Structure</strong>: Each word is represented by a box containing:
+    <ul>
+      <li>Top row (red): The dependency relationship with other words</li>
+      <li>Middle row: The actual word from the sentence</li>
+      <li>Bottom row: The part of speech (POS) tag (NOUN, VERB, ADJ, etc.)</li>
+    </ul>
+  </li>
+  <li><strong>Arrows and Connections</strong>:
+    <ul>
+      <li>Colored arrows show relationships between words</li>
+      <li>Arrow direction indicates dependency flow (from modifier to modified word)</li>
+      <li>Different colors help distinguish multiple relationships</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="toxicity-analysis">Toxicity Analysis</h4>
+
+<p><img src="images/toxicity-analysis.png" alt="Toxicity Analysis" /></p>
+
+<p><strong>Shows confidence scores for different toxicity categories</strong></p>
+
+<h4 id="tips">Tips</h4>
+<ul>
+  <li>For best results use complete sentences with proper grammar</li>
+  <li>You can generate multiple variations by changing the tense</li>
+</ul>
+

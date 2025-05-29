@@ -1,0 +1,86 @@
+@startuml InternalSentenceAnalysis
+hide footbox
+skinparam sequenceMessageAlign center
+title Internal Sequence Diagram: Sentence Analysis
+
+actor User
+participant NoSenseController
+participant Sentence
+participant Analyzer
+participant GoogleApi
+participant GraphvizGenerator
+participant GraphvizRenderer
+participant AnalysisResultToken
+User -> NoSenseController: analyzeInputSentence(sentence,sessionId,requestSyntacticTree,model,redirectAttribute)
+activate NoSenseController
+alt User does not provide a sentence
+    NoSenseController --> User: Error: Please enter a sentence to analyze
+else User provides a sentence
+    NoSenseController -> Sentence: new Sentence(sentence)
+    activate Sentence
+    Sentence --> NoSenseController
+    deactivate Sentence
+    NoSenseController -> Analyzer: analyzeSyntax(Sentence)
+    activate Analyzer
+    alt apikey not set
+        Analyzer --> NoSenseController: Error: Google API key is not set
+    else apikey is set
+        Analyzer -> GoogleApi: analyzeSyntax
+        activate GoogleApi
+        GoogleApi --> Analyzer: analysisResult
+        deactivate GoogleApi
+        hnote over Analyzer: analysisResultTokens = new ArrayList<AnalysisResultToken>()
+        loop for each token in analysisResult
+            hnote over Analyzer: Extract token attributes from json
+            Analyzer -> AnalysisResultToken: new AnalysisResultToken(index, text, tag, dependencyLabel, headTokenIndex, tense)
+            activate AnalysisResultToken
+            AnalysisResultToken --> Analyzer
+            deactivate AnalysisResultToken
+            hnote over Analyzer: analysisResultTokens.add(token)
+        end
+        alt error during analysis
+            Analyzer --> NoSenseController: Error: Failed to analyze sentence
+        else analysis successful
+            Analyzer -> NoSenseController: analysisResultTokens
+        end
+    end
+    deactivate Analyzer
+    NoSenseController -> Sentence: setAnalysisResultTokens(analysisResultTokens)
+    activate Sentence
+    Sentence --> NoSenseController
+    deactivate Sentence
+    opt requestSyntacticTree == true
+        NoSenseController -> GraphvizGenerator: GenerateDependencyGraph(analysisResultTokens, graphName)
+        activate GraphvizGenerator
+        GraphvizGenerator --> NoSenseController
+        deactivate GraphvizGenerator
+        NoSenseController -> GraphvizRenderer: RenderDependencyGraph(graphName)
+        activate GraphvizRenderer
+        GraphvizRenderer --> NoSenseController: renderedGraph
+        deactivate GraphvizRenderer
+    end
+    alt Error in analysis
+        NoSenseController --> User: Error: Failed to analyze sentence
+    else Sentence has no tokens
+        NoSenseController --> User: Error: No tokens found in the sentence
+    else
+        NoSenseController -> Sentence: getNouns()
+        activate Sentence
+        Sentence --> NoSenseController: nouns
+        deactivate Sentence
+        NoSenseController -> Sentence: getVerbs()
+        activate Sentence
+        Sentence --> NoSenseController: verbs
+        deactivate Sentence
+        NoSenseController -> Sentence: getAdjectives()
+        activate Sentence
+        Sentence --> NoSenseController: adjectives
+        deactivate Sentence
+        NoSenseController --> User: display analysis result
+    end
+    deactivate NoSenseController
+end
+
+
+
+@enduml
