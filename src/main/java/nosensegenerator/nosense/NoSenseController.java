@@ -68,10 +68,10 @@ public class NoSenseController {
             model.addAttribute("generatedSentence", new Sentence(""));
         }
         if (!model.containsAttribute("toxicityResultTokens")) {
-            model.addAttribute("toxicityResultTokens", null);
+            model.addAttribute("toxicityResultTokens", new ArrayList<ToxicityResultToken>());
         }
         if (!model.containsAttribute("graphImageName")) {
-            model.addAttribute("graphImageName", null);
+            model.addAttribute("graphImageName", "graph");
         }
         if (!model.containsAttribute("nouns")) {
             model.addAttribute("nouns", null);
@@ -129,8 +129,8 @@ public class NoSenseController {
             model.addAttribute("verbs", null);
             model.addAttribute("adjectives", null);
 
-            model.addAttribute("toxicityResultTokens", null);
-            model.addAttribute("graphImageName", null);
+            model.addAttribute("toxicityResultTokens", new ArrayList<>());
+            model.addAttribute("graphImageName", "graph");
 
             model.addAttribute("selectedTime", "PRESENT");
 
@@ -201,7 +201,7 @@ public class NoSenseController {
             RedirectAttributes redirectAttributes) {
         try {
             model.addAttribute("generatedSentence", new Sentence(""));
-            model.addAttribute("toxicityResultTokens", null);
+            model.addAttribute("toxicityResultTokens", new ArrayList<>());
 
             String templateSentence = generator.generateTemplateSentence();
 
@@ -263,7 +263,7 @@ public class NoSenseController {
         }
 
         try {
-            model.addAttribute("toxicityResultTokens", null);
+            model.addAttribute("toxicityResultTokens", new ArrayList<>());
 
             Sentence generatedSentence = generator.fillTemplateSentence(
                     templateSentence,

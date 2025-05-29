@@ -1,6 +1,7 @@
 package nosensegenerator.nosense;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -104,6 +105,7 @@ public class GraphvizGeneratorTest {
         } catch (Exception e) {
             System.err.println("Error reading DOT file: " + e.getMessage());
             e.printStackTrace();
+            fail("Test failed due to exception: " + e.getMessage());
         }
     }
 

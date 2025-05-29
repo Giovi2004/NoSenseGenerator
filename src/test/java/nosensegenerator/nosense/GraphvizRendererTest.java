@@ -69,6 +69,7 @@ public class GraphvizRendererTest {
             System.out.println("Rendered graph to: " + result);
         } catch (Exception e) {
             e.printStackTrace();
+            fail("Test failed due to exception: " + e.getMessage());
         }
     }
 }

@@ -119,11 +119,11 @@
               <div class="card h-100">
                 <div class="card-body d-flex flex-column">
                   <h5 class="card-title">Your Generation</h5>
-                  <form 
+                  <form
                     th:action="@{/generate-template}"
                     method="post"
-                    class="flex-grow-1 d-flex flex-column">
-
+                    class="flex-grow-1 d-flex flex-column"
+                  >
                     <div class="form-floating flex-grow-1 my-3 mx-4">
                       <textarea
                         class="form-control h-100"
@@ -144,7 +144,6 @@
                         Generate template
                       </button>
                     </div>
-
                   </form>
 
                   <form
@@ -173,9 +172,24 @@
                         name="tense"
                         aria-label="Time select"
                       >
-                        <option value="PRESENT" th:selected="${selectedTime} == 'PRESENT'">Present</option>
-                        <option value="PAST" th:selected="${selectedTime} == 'PAST'">Past</option>
-                        <option value="FUTURE" th:selected="${selectedTime} == 'FUTURE'">Future</option>
+                        <option
+                          value="PRESENT"
+                          th:selected="${selectedTime} == 'PRESENT'"
+                        >
+                          Present
+                        </option>
+                        <option
+                          value="PAST"
+                          th:selected="${selectedTime} == 'PAST'"
+                        >
+                          Past
+                        </option>
+                        <option
+                          value="FUTURE"
+                          th:selected="${selectedTime} == 'FUTURE'"
+                        >
+                          Future
+                        </option>
                       </select>
                     </div>
 
@@ -207,24 +221,30 @@
                   </p>
 
                   <!-- Display the extracted words -->
-                  <div class="card-text text-start" th:if="${nouns != null and nouns.size() > 0}">
+                  <div
+                    class="card-text text-start"
+                    th:if="${nouns != null and nouns.size() > 0}"
+                  >
                     <h6>Nouns:</h6>
                     <ul>
                       <li th:each="noun : ${nouns}" th:text="${noun}"></li>
                     </ul>
                   </div>
 
-                  <div class="card-text text-start" th:if="${verbs != null and verbs.size() > 0}">
+                  <div
+                    class="card-text text-start"
+                    th:if="${verbs != null and verbs.size() > 0}"
+                  >
                     <h6>Verbs:</h6>
                     <ul>
-                      <li
-                        th:each="verb : ${verbs}"
-                        th:text="${verb}"
-                      ></li>
+                      <li th:each="verb : ${verbs}" th:text="${verb}"></li>
                     </ul>
                   </div>
 
-                  <div class="card-text text-start" th:if="${adjectives != null and adjectives.size() > 0}">
+                  <div
+                    class="card-text text-start"
+                    th:if="${adjectives != null and adjectives.size() > 0}"
+                  >
                     <h6>Adjectives:</h6>
                     <ul>
                       <li
@@ -234,7 +254,10 @@
                     </ul>
                   </div>
                   <!-- Display the graph image if available -->
-                  <div class="mb-3 text-start" th:if="${graphImageName} != null">
+                  <div
+                    class="mb-3 text-start"
+                    th:if="${graphImageName} != graph"
+                  >
                     <h6>Dependency Graph:</h6>
                     <img
                       th:src="@{'/graphs-images/' + ${graphImageName}}"
@@ -259,37 +282,42 @@
               <div class="card h-100">
                 <div class="card-body d-flex flex-column">
                   <h5 class="card-title">Sentence Toxicity Analysis</h5>
-
-                  <p class="card-text" th:if="${toxicityResult == null}">
-                    The toxicity analysis of the generated sentence will appear
-                    here
-                  </p>
-
-                  <div th:each="token : ${toxicityResultTokens}">
+                  <div
+                    th:with="hasTokens=${toxicityResultTokens != null and not toxicityResultTokens.empty}"
+                  >
                     <p
                       class="card-text"
-                      th:if="${toxicityResultTokens != null}"
+                      th:if="${toxicityResultTokens == null}"
                     >
-                      <span th:text="${token.getName}"></span>
+                      The toxicity analysis of the generated sentence will
+                      appear here
                     </p>
 
-                    <div class="mb-3" th:if="${toxicityResultTokens != null}">
-                      <div class="d-flex align-items-center">
-                        <span class="me-3 fw-bold">Confidence:</span>
-                        <div class="flex-grow-1">
-                          <div class="progress">
-                            <div
-                              class="progress-bar"
-                              role="progressbar"
-                              th:style="'width: ' + ${token.confidencePercentage} + '%'"
-                              th:classappend="${token.confidencePercentage < 50 ? 'bg-success' : (token.confidencePercentage < 75 ? 'bg-warning' : 'bg-danger')}"
-                              th:aria-valuenow="${token.confidencePercentage}"
-                              aria-valuemin="0"
-                              aria-valuemax="100"
-                            >
-                              <span
-                                th:text="${token.confidencePercentage + '%'}"
-                              ></span>
+                    <div th:if="${hasTokens}" class="w-100">
+                      <div th:each="token : ${toxicityResultTokens}">
+                        <p class="card-text">
+                          <span th:text="${token.getName}"></span>
+                        </p>
+
+                        <div class="mb-3">
+                          <div class="d-flex align-items-center">
+                            <span class="me-3 fw-bold">Confidence:</span>
+                            <div class="flex-grow-1">
+                              <div class="progress">
+                                <div
+                                  class="progress-bar"
+                                  role="progressbar"
+                                  th:style="'width: ' + ${token.confidencePercentage} + '%'"
+                                  th:classappend="${token.confidencePercentage < 50 ? 'bg-success' : (token.confidencePercentage < 75 ? 'bg-warning' : 'bg-danger')}"
+                                  th:aria-valuenow="${token.confidencePercentage}"
+                                  aria-valuemin="0"
+                                  aria-valuemax="100"
+                                >
+                                  <span
+                                    th:text="${token.confidencePercentage + '%'}"
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
