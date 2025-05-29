@@ -38,14 +38,14 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
-          bundler-cache: true
-          working-directory: docs/pages
+          #bundler-cache: true
+          #working-directory: docs/pages
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
       - name: Build with Jekyll
-        working-directory: docs/pages
-        run: bundle exec jekyll build --baseurl "/NoSenseGenerator"
+        #working-directory: docs/pages
+        run: bundle exec jekyll build --source ../../docs --destination _site
         env:
           JEKYLL_ENV: production
       - name: Upload artifact
