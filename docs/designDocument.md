@@ -1,3 +1,9 @@
+---
+title: Design Document
+layout: default
+nav_order: 2
+---
+
 # Design Document
 ## Domain Model
 ![image](diagrams/domainmodel.png)
