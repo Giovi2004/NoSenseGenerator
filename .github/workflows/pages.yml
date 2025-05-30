@@ -43,9 +43,7 @@ jobs:
       - name: Build the site
         run: |
           cd docs/pages
-          DOCS_DIR="${GITHUB_WORKSPACE}/docs"
-          PAGES_DIR="${DOCS_DIR}/pages"
-          bundle exec jekyll build --source "$DOCS_DIR" --destination "$PAGES_DIR/_site"
+          bundle exec jekyll build
         env:
           JEKYLL_ENV: production
 
