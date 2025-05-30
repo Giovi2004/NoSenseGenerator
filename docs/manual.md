@@ -54,9 +54,10 @@ Random Nonsense Sentence Generator is a project developed, by [Leonardo Erta](ht
 
 ## Used APIs
 
-| API | Purpose | Features Used |
-|-----|---------|--------------|
-| Google Cloud Natural Language | - Text Analysis<br>- Content Moderation | - Syntactic analysis<br>- Entity extraction<br>- Part-of-speech tagging<br>- Toxicity detection |
+| Provider | API | Purpose | Features Used |
+|----------|-----|---------|---------------|
+| Google Cloud | analyzeSyntax | Sentence structure analysis | - Syntactic analysis<br>- Dependency parsing<br>- Part-of-speech tagging |
+| Google Cloud | moderateText | Content Moderation | - Toxicity detection |
 
 
 ## Getting Started
@@ -95,7 +96,7 @@ This project uses Google Cloud Natural Language AI for text analysis. Get an API
 
 ### Configuration
 
-After cloning the repository, enter your API key in `application.properties` found in the resources directory:
+After cloning the repository, enter your API key in `application.properties` found in the `src\resources` directory:
 
 ```properties
 GOOGLE_API_KEY=ENTER YOUR API KEY
@@ -113,11 +114,6 @@ Skip tests during build:
 ./mvnw clean package -DskipTests
 ```
 
-Skip test compilation and execution:
-```shell
-./mvnw clean package -Dmaven.test.skip=true
-```
-
 ### Running
 
 Start the application:
@@ -127,10 +123,15 @@ Start the application:
 
 Or run the JAR directly (after building):
 ```shell
-java -jar nosense.jar
+java -jar nosense-0.0.1-SNAPSHOT.jar
 ```
 
 The jar file is found in the `target` directory.
+
+#### Access the application in your browser at:
+```
+http://localhost:8080
+```
 
 ## Development
 
