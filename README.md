@@ -10,5 +10,5 @@ All the documentation is available:
 - In the `docs` folder of the repository
   - [manual.md](docs/manual.md): Manual
   - [designDocument.md](docs/designDocument.md): Design Document
-  - [reportSystemTest.md](docs/reportSystemTest.md): System Test Report
+  - [systemTestDocument.md](docs/systemTestDocument.md): System Test Document
   - [test-report](docs/test-report): Unit Test Report (open the `surefire.html` file)
