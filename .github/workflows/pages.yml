@@ -27,8 +27,8 @@ jobs:
 
       - name: Debug directory structure
         run: |
-        echo "Workspace: $GITHUB_WORKSPACE"
-        ls -R $GITHUB_WORKSPACE/docs
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          ls -R "$GITHUB_WORKSPACE/docs"
         
       - name: Setup Pages
         id: pages
