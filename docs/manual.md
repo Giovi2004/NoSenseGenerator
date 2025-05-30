@@ -114,11 +114,6 @@ Skip tests during build:
 ./mvnw clean package -DskipTests
 ```
 
-Skip test compilation and execution:
-```shell
-./mvnw clean package -Dmaven.test.skip=true
-```
-
 ### Running
 
 Start the application:
@@ -128,10 +123,15 @@ Start the application:
 
 Or run the JAR directly (after building):
 ```shell
-java -jar nosense.jar
+java -jar nosense-0.0.1-SNAPSHOT.jar
 ```
 
 The jar file is found in the `target` directory.
+
+### Access the application in your browser at:
+```
+http://localhost:8080
+```
 
 ## Development
 
