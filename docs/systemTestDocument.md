@@ -73,6 +73,7 @@ nav_order: 3
 **Then** the system generates a sentence in the selected time tense and displaysis it
 
 # System Test Report
+
 | Acceptance Criteria | Date | Status | Remarks |
 |---------------------|------|--------|---------|
 | AC01 | 30/05/2025 | OK | - |
