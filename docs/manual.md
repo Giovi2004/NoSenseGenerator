@@ -61,7 +61,7 @@ Random Nonsense Sentence Generator is a project developed, by [Leonardo Erta](ht
 
 ## Getting Started
 
-Follow these instructions to get a copy of this project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on deploying the project on a live system.
+Follow these instructions to get a copy of this project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
@@ -151,9 +151,8 @@ Assuming [Jekyll] and [Bundler] are installed on your computer, you can build an
 3. Run `bundle exec jekyll serve`
 4. Preview at `localhost:4000`
 
-    The built site is stored in the directory `docs/pages/_site`.
+    The built site is stored in the directory `docs/_site`.
 
-Note: Put images in images folder
 
 
 ## Usage
