@@ -49,7 +49,7 @@ Random Nonsense Sentence Generator is a project developed, by [Leonardo Erta](ht
 | JUnit | Latest | - Unit testing framework<br>- Test reporting |
 | Mockito | 5.2.0 | - Mocking framework for unit tests<br>- Enable testing of classes not testable through Junit |
 | org.json | 20230618 | - JSON data processing<br>- API response handling |
-| Jekyll | Latest | - Documentation site generation<br>- Markdown processing<br>- Documentation templating |
+| java.net | | - HTTP client for API requests |
 
 ## Used APIs
 
