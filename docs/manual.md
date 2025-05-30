@@ -20,11 +20,10 @@ permalink: /
     - [Configuration](#configuration)
     - [Building](#building)
     - [Running](#running)
+    - [Access the application](#access-the-application-in-a-browser-at)
   - [Development](#development)
     - [Testing](#testing)
     - [Documentation](#documentation)
-    - [Deployment](#deployment)
-    - [Security Considerations](#security-considerations)
   - [Usage](#usage)
     - [Basic Usage](#basic-usage)
       - [Basic Operations](#basic-operations)
@@ -48,8 +47,8 @@ Random Nonsense Sentence Generator is a project developed, by [Leonardo Erta](ht
 | Maven Surefire Report Plugin | 3.5.3 | - Generates HTML reports of unit tests|
 | Thymeleaf | Latest | - Server-side templating<br>- Dynamic HTML rendering |
 | JUnit | Latest | - Unit testing framework<br>- Test reporting |
-| Mockito | 5.2.0 | - Mocking framework for unit tests |
-| JSON Library | 20230618 | - JSON data processing<br>- API response handling |
+| Mockito | 5.2.0 | - Mocking framework for unit tests<br>- Enable testing of classes not testable through Junit |
+| org.json | 20230618 | - JSON data processing<br>- API response handling |
 | Jekyll | Latest | - Documentation site generation<br>- Markdown processing<br>- Documentation templating |
 
 ## Used APIs
@@ -128,7 +127,7 @@ java -jar nosense-0.0.1-SNAPSHOT.jar
 
 The jar file is found in the `target` directory.
 
-#### Access the application in your browser at:
+### Access the application in a browser at:
 ```
 http://localhost:8080
 ```
@@ -156,36 +155,6 @@ Assuming [Jekyll] and [Bundler] are installed on your computer, you can build an
 
 Note: Put images in images folder
 
-### Deployment
-
-### Security Considerations
-Before deploying to production, be aware of these security risks and limitations:
-
-**Storage**
-- Files saved in system temp directory
-- No automatic cleanup mechanism
-- No file size limitations
-- No storage quota management
-
-**Input/Output Security**
-- User input not sanitized
-
-**Authentication & Authorization**
-- No user authentication system
-- No role-based access control
-- No request limitations
-
-**Cloud Resources**
-- No usage quotas configured
-- Watch Google Cloud billing costs
-- No monitoring/logging/alerting system
-
-**Recommended Actions**
-1. Implement proper file storage with cleanup
-2. Add input sanitization and validation
-3. Set up user authentication/authorization
-4. Configure rate limiting and quotas
-5. Implement monitoring/logging/alerting
 
 ## Usage
 
