@@ -1,11 +1,11 @@
 title: No Sense Generator
-description: A starter template for a Jeykll site using the Just the Docs theme!
+description: Documentation for No Sense Generator.
 theme: just-the-docs
 
 source: ../../docs
 destination: ./_site
 
-url: https://just-the-docs.github.io
+url: https://Giovi2004.github.io/NoSenseGenerator
 
 aux_links:
-  Template Repository: https://github.com/just-the-docs/just-the-docs-template
+  Template Repository: https://github.com/Giovi2004/NoSenseGenerator
